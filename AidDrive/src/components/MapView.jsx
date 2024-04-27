@@ -1,36 +1,3 @@
-// import React from 'react';
-// import mapboxgl from 'mapbox-gl';
-
-// mapboxgl.accessToken = 'pk.eyJ1IjoiYWhtYXltYW4iLCJhIjoiY2x2aTR2ZHZpMWJlZDJsbzVuYnlxeHU2OSJ9.8zmyP66lBPKTv9LUkknOqQ';
-
-
-// const MapView = () => {
-//   // Create a ref to hold the map container DOM element
-//   const mapContainerRef = React.useRef(null);
-
-//   // Initialize the map when the component mounts
-//   React.useEffect(() => {
-//     const map = new mapboxgl.Map({
-//       container: mapContainerRef.current,
-//       style: 'mapbox://styles/mapbox/streets-v12',
-//       center: [31.2357, 30.0444],
-//       zoom: 10
-//     });
-
-//     // Clean up on unmount
-//     return () => map.remove();
-//   }, []);
-
-//   return (
-//     <div>
-//       <div ref={mapContainerRef} className='h-[700px] w-[550px]' />
-//     </div>
-//   );
-// };
-
-// export default MapView;
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-google-maps/api": "^2.19.3",
     "mapbox-gl": "^3.3.0",
     "react-router-dom": "^6.22.3"
   }
