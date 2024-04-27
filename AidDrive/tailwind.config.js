@@ -15,7 +15,7 @@ export default {
       colors:{
         "primary":"#28282C",
         "secondary":"#D9D9D9",
-        "whiteText":"#EFF9F0",
+        "whitish":"#EFF9F0",
         "accent":"#DDC8C4"
 
       }
