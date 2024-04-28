@@ -1,38 +1,43 @@
+// import React, { useState, useEffect } from 'react';
+// import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+
+// const libraries = []; // No libraries needed for basic markers
+
+// const MyMapComponent = () => {
+
+//   return (
+//     <div className='w-[500px] h-[500px]'>
+//     <gmp-map center={userLocation} zoom="16" map-id="DEMO_MAP_ID">
+//       {/* <gmp-advanced-marker position="30.059871673583984,31.221120834350586" title="My location"></gmp-advanced-marker> */}
+//     </gmp-map>
+//     </div>
+//   );
+// };
+
+// export default MyMapComponent;
+
+
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-const libraries = []; // No libraries needed for basic markers
+const libraries = [];
 
-const MyMapComponent = ({ center = { lat: 37.7749, lng: -122.4194 } }) => {
-  const [map, setMap] = useState(null);
-
-  const mapContainerStyle = {
-    width: '500px',
-    height: '500px',
+const MyMapComponent = ({ userLocation }) => {
+  const mapStyles = {
+    width: '100%',
+    height: '100%',
+    borderRadius: '20px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   };
-
-  const options = {
-    disableDefaultUI: true,
-    zoomControl: true,
-  };
-
-  useEffect(() => {
-    console.log('Map component mounted');
-  }, []);
 
   return (
-    <LoadScript
-      googleMapsApiKey="YOUR_API_KEY" // Replace with your actual API key
-      libraries={libraries}
-    >
+    <LoadScript googleMapsApiKey="AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI" libraries={libraries}>
       <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        options={options}
-        zoom={8}
-        center={center}
-        onLoad={(map) => setMap(map)}
+        mapContainerStyle={mapStyles}
+        center={userLocation}
+        zoom={16}
       >
-        {map && <Marker position={center} />}
+        <Marker position={userLocation} title="My location" />
       </GoogleMap>
     </LoadScript>
   );

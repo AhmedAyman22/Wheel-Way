@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWhtYXltYW4iLCJhIjoiY2x2aTR2ZHZpMWJlZDJsbzVuYnlxeHU2OSJ9.8zmyP66lBPKTv9LUkknOqQ';
 
-const MapView = () => {
+const MapView = ({className}) => {
   const mapContainerRef = useRef(null);
   const [userLocation, setUserLocation] = useState([31.2357, 30.0444]); // Default coordinates
   const [locationErrorMessage, setLocationErrorMessage] = useState('');
@@ -36,7 +36,7 @@ const MapView = () => {
   return (
     <div>
       {locationErrorMessage && <div className='error-message'>{locationErrorMessage}</div>}
-      <div ref={mapContainerRef} className='h-[700px] w-[550px] rounded-[20px] drop-shadow-lg' />
+      <div ref={mapContainerRef} className={`${className}`} />
     </div>
   );
 };
