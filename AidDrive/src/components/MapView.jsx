@@ -1,43 +1,64 @@
-import React, { useState, useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYWhtYXltYW4iLCJhIjoiY2x2aTR2ZHZpMWJlZDJsbzVuYnlxeHU2OSJ9.8zmyP66lBPKTv9LUkknOqQ';
+import React, { useState, useEffect } from 'react';
+import { useLoadScript, GoogleMap } from '@react-google-maps/api';
 
-const MapView = ({className}) => {
-  const mapContainerRef = useRef(null);
-  const [userLocation, setUserLocation] = useState([31.2357, 30.0444]); // Default coordinates
-  const [locationErrorMessage, setLocationErrorMessage] = useState('');
+const libraries = ['places']; // Remove libraries for this functionality
+
+const apiKey = "AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI";
+
+const MapView = () => {
+  const [map, setMap] = useState(null);
+  const [userLocation, setUserLocation] = useState(null); // State to store user location
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: apiKey,
+    libraries,
+  });
+
+  const handleMapLoad = (mapInstance) => {
+    setMap(mapInstance);
+    // Hide controls after map loads
+    if (mapInstance) {
+      mapInstance.controls[window.google.maps.ControlPosition.TOP_LEFT].push(...[
+        window.google.maps.ControlPosition.BOTTOM_LEFT,
+      ]);
+    }
+  };
 
   useEffect(() => {
-    // Request the user's location
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        // On success, update the userLocation state
-        setUserLocation([position.coords.longitude, position.coords.latitude]);
-      },
-      () => {
-        // On error or if permission is denied, set an error message
-        setLocationErrorMessage('Location access must be permitted for this feature to work correctly.');
+    const getUserLocation = async () => {
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        } catch (error) {
+          console.error('Error fetching user location:', error);
+          // Handle location access denied or other errors (optional)
+        }
+      } else {
+        console.error('Geolocation is not supported by your browser');
       }
-    );
-  }, []);
+    };
 
-  useEffect(() => {
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: userLocation, // Set the center to the user's location
-      zoom: 16
-    });
+    getUserLocation();
+  }, []); // Empty dependency array to run only once on mount
 
-    return () => map.remove();
-  }, [userLocation]); // This effect will re-run when userLocation changes
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading maps</div>;
 
   return (
-    <div>
-      {locationErrorMessage && <div className='error-message'>{locationErrorMessage}</div>}
-      <div ref={mapContainerRef} className={`${className}`} />
-    </div>
+    <GoogleMap
+      mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '20px' }} // Add border radius
+      zoom={userLocation ? 16 : 10}
+      center={userLocation || { lat: 0, lng: 0 }}
+      onLoad={handleMapLoad}
+    >
+    </GoogleMap>
   );
 };
 
