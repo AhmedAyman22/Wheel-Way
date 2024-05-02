@@ -8,28 +8,37 @@ import vipRide from '../assets/images/vipRide_icon.png';
 import arrowRight from '../assets/images/arrow_right.png';
 import MyMapComponent from '../components/MapView'; // Import the modified map component
 
-
-
+var basicStyling = 'relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md cursor-pointer hover:bg-accent hover:-translate-y-1'
+var vanStyling = 'relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md mt-[25px] cursor-pointer hover:bg-accent hover:-translate-y-1'
+var vipStyling = 'relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md mt-[25px] cursor-pointer hover:bg-accent hover:-translate-y-1'
 
 const BookingPage = () => {
   const [pickupAddress, setPickupAddress] = useState('');
   const [pickupCoordinates, setPickupCoordinates] = useState(null);
   const [dropoffAddress, setDropoffAddress] = useState('');
   const [dropoffCoordinates, setDropoffCoordinates] = useState(null);
+  var RideClass = 'Default'
 
-  useEffect(() => {
-    if (pickupAddress) {
-      Geocode.fromAddress(pickupAddress).then(
-        (response) => {
-          const { lat, lng } = response.results[0].geometry.location;
-          setPickupCoordinates({ lat, lng });
-        },
-        (error) => {
-          console.error('Error fetching pickup coordinates:', error);
-        }
-      );
-    }
-  }, [pickupAddress]);
+  const BasicClass = () => {
+    RideClass = 'BasicClass'
+    basicStyling.replace('bg-secondary','bg-accent')
+    console.log(basicStyling)
+    getClass();
+
+  };
+  const VanClass = () => {
+    RideClass = 'VanClass'
+    vanStyling.replace("bg-secondary","bg-accent")
+    getClass();
+  };
+  const VipClass = () => {
+    RideClass = 'VipClass'
+    vipStyling.replace("bg-secondary","bg-accent")
+    getClass();
+  };
+  const getClass = ()=>{
+    console.log(RideClass)
+  }
 
   useEffect(() => {
     if (dropoffAddress) {
@@ -72,31 +81,32 @@ const BookingPage = () => {
         </div>
 
         <div className='h-[600px] w-[500px] bg-whitish drop-shadow-lg rounded-[20px] absolute top-[250px] left-[700px] inline-block '>
-     <h3 className='text-[36px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary ' >Choose a Ride</h3>
+     <h3 className='text-[36px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary' >Choose a Ride</h3>
 
-     <div className='relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md'>
+     <div className= {basicStyling} onClick={BasicClass}>
      <h4 className='font-bold text-[24px] relative left-[150px] top-[10px] inline-block text-primary'>Basic Ride</h4>
      <img src={basicRide} className='h-[40px] relative right-[110px] top-[30px] inline-block' />
      <p className='text-[14px] relative left-[150px] inline-block text-primary'>Basic car with a special-needs <br></br>trained driver</p>
-     <a href=""><img src={arrowRight} className='h-[30px] relative left-[170px] bottom-[20px] inline-block' /></a>
+     <a><img src={arrowRight} className='h-[30px] relative left-[170px] bottom-[20px] inline-block' /></a>
     </div>
 
-     <div className='relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md mt-[25px]'>
+     <div className={vanStyling} onClick={VanClass}>
      <h4 className='font-bold text-[24px] relative left-[150px] inline-block text-primary'>Van Ride</h4>
      <img src={vanRide} className='h-[40px] relative right-[75px] top-[30px] inline-block' />
      <p className='text-[14px] relative top-[45px] right-[45px] inline-block text-primary'>Van car with a special-needs<br></br>trained driver</p>
-     <a href=""><img src={arrowRight} className='h-[30px] relative left-[355px] bottom-[15px] inline-block' /></a>
+     <a><img src={arrowRight} className='h-[30px] relative left-[355px] bottom-[15px] inline-block' /></a>
      </div>
 
-     <div className='relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md mt-[25px]'>
+     <div className={vipStyling} onClick={VipClass}>
      <h4 className='font-bold text-[24px] relative left-[150px] top-[10px] inline-block text-primary'>VIP Van Ride</h4>
-     <img src={vipRide} className='h-[40px] relative right-[120px] top-[30px] inline-block' />
+     <img src={vipRide} className='h-[40px] relative right-[120px] top-[30px] inline-block'/>
      <p className='text-[14px] relative left-[150px] inline-block text-primary'>Van car with a special-needs<br></br>trained driver and a care-giver</p>
-     <a href=""><img src={arrowRight} className='h-[30px] relative left-[170px] bottom-[20px] inline-block' /></a>
+     <a><img src={arrowRight} className='h-[30px] relative left-[170px] bottom-[20px] inline-block cursor:pointer' /></a>
      </div>
+     <div className='h-[600px] w-[500px] drop-shadow-lg  relative bottom-[435px] left-[570px] inline-block rounded-[20px] bg-accent'>
+     <MyMapComponent  userLocation={userLocation}/></div>
      </div>
-     <div className='h-[600px] w-[500px] drop-shadow-lg  absolute top-[250px] right-[150px] inline-block rounded-[20px] bg-accent'>
-     <MyMapComponent userLocation={userLocation} /></div>
+     
       </div>
     </>
   );
