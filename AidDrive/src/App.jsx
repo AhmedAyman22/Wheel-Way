@@ -4,7 +4,7 @@ import MainLayout from './layouts/MainLayout';
 import JoinUs from './pages/JoinUs';
 import JoinCaptain from './pages/JoinCaptain';
 import BookingPage from './pages/BookingPage';
-import Map from './components/Map';
+import MapView from './components/MapView';
 
 
 
@@ -15,7 +15,7 @@ const router = createBrowserRouter(
       <Route path='/join' element={<JoinUs />}/>
       <Route path='/join/captain' element={<JoinCaptain />}/>
       <Route path='/booking' element={<BookingPage />}/>
-      <Route path='/Map' element={<Map />}/>
+      <Route path='/Map' element={<MapView />}/>
     </Route>
   )
 );
