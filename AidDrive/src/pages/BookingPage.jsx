@@ -1,4 +1,6 @@
-// Geocode.setApiKey('AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI');
+/*
+'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'
+*/
 
 import React, { useState, useEffect } from 'react';
 import {Geocode, setKey} from 'react-geocode';
@@ -7,11 +9,8 @@ import basicRide from '../assets/images/basicRide_icon.png';
 import vanRide from '../assets/images/vanRide_icon.png';
 import vipRide from '../assets/images/vipRide_icon.png';
 import arrowRight from '../assets/images/arrow_right.png';
-import MyMapComponent from '../components/MapView'; 
+import MapView from '../components/MapView'; 
 
-var basicStyling = 'relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md cursor-pointer hover:bg-accent hover:-translate-y-1'
-var vanStyling = 'relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md mt-[25px] cursor-pointer hover:bg-accent hover:-translate-y-1'
-var vipStyling = 'relative w-[400px] h-[100px] bg-secondary rounded-[5px] top-[40px] left-[50px] drop-shadow-md mt-[25px] cursor-pointer hover:bg-accent hover:-translate-y-1'
 
 const apiKey = 'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI';
 setKey(apiKey);
@@ -21,6 +20,10 @@ const BookingPage = () => {
   const [pickupCoordinates, setPickupCoordinates] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
   const [dropoffCoordinates, setDropoffCoordinates] = useState('');
+  const [selectedRide, setSelectedRide] = useState(null);
+
+
+
   var RideClass = 'Default'
 
   const BasicClass = () => {
@@ -47,8 +50,8 @@ const BookingPage = () => {
       geocoder.geocode( { 'address': address.label}, function(results, status) {
       console.log('status',status)
       var lat = results[0].geometry.location.lat();
-      var lon = results[0].geometry.location.lng();
-      setter({ lat, lon });
+      var lng = results[0].geometry.location.lng();
+      setter({ lat, lng });
     });
 
     } catch (error) {
@@ -72,23 +75,27 @@ const BookingPage = () => {
   const handlePickupChange = (e) => {
     setPickupAddress(e.target.value);
   };
-
+  
 
   const handleDropoffChange = (e) => {
     setDropoffAddress(e.target.value);
   };
 
-
   const handleConfirm = () => {
-    console.log('Pickup Address:', pickupAddress);
-    console.log('Pickup Coordinates:', pickupCoordinates);
-    console.log('Dropoff Address:', dropoffAddress);
-    console.log('Dropoff Coordinates:', dropoffCoordinates);
+    // Assuming you want to rerender MapView when confirming
+    setSelectedRide(selectedRide === null ? {} : null);
   };
-  const userLocation = { lat: 31.2357, lng: 30.0444 };
+
+  const coords = {
+    pickupLat: pickupCoordinates?.lat,
+    pickupLng: pickupCoordinates?.lng,
+    dropoffLat: dropoffCoordinates?.lat,
+    dropoffLng: dropoffCoordinates?.lng,
+  };
+
   return (
     <>
-      <div>
+      <div className='w-[100%] h-[100%]'>
         <h1 className='text-[36px] font-bold flex items-center justify-center h-auto sm:text-[48px] mt-[30px] text-primary'>BOOK A TRIP</h1>
         <div className='absolute left-[280px] top-[250px] w-[350px] h-[450px] bg-whitish rounded-[20px] inline-block drop-shadow-lg'>
           <h2 className='text-[28px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary'>Find a trip</h2>
@@ -125,6 +132,7 @@ const BookingPage = () => {
                 placeholder: 'Drop-off Location...',
               },
             }}
+
           />
           </div>
           <button className='inline-block w-[130px] h-[50px] bg-accent rounded-[5px] drop-shadow-lg relative top-[75px] left-[110px] font-bold text-[20px] text-primary hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 hover:text-whitish' onClick={handleConfirm}>CONFIRM</button>
@@ -153,8 +161,10 @@ const BookingPage = () => {
      <p className='text-[14px] relative left-[150px] inline-block text-primary'>Van car with a special-needs<br></br>trained driver and a care-giver</p>
      <a><img src={arrowRight} className='h-[30px] relative left-[170px] bottom-[20px] inline-block cursor:pointer' /></a>
      </a>
+
      <div className='h-[600px] w-[500px] drop-shadow-lg  relative bottom-[435px] left-[570px] inline-block rounded-[20px] bg-accent'>
-     <MyMapComponent  userLocation={userLocation}/></div>
+     <MapView coordinates={coords} key={JSON.stringify(selectedRide)} />
+     </div>
      </div>
       </div>
     </>
@@ -162,3 +172,4 @@ const BookingPage = () => {
 }
 
 export default BookingPage;
+
