@@ -4,6 +4,9 @@ import { GoogleMap, DirectionsRenderer, useLoadScript } from "@react-google-maps
 const defaultLocation = { lat: 30.0444, lng: 31.2357 };
 let directionsService;
 
+export let distanceinKM = null;
+export let tripTimeinMins = null;
+
 const apiKey = "AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI";
 const libraries = ['places', 'directions'];
 const styles = {
@@ -310,14 +313,14 @@ const MapView = (coordinates) => {
 
   let origin = { lat: parseFloat(coordinates.pickupLat), lng: parseFloat(coordinates.pickupLng) };
   let destination = { lat: parseFloat(coordinates.dropoffLat), lng: parseFloat(coordinates.dropoffLng) };
-  
+
   const onMapLoad = (map) => {
     directionsService = new window.google.maps.DirectionsService();
     // Load default origin and destination
     map.controls[window.google.maps.ControlPosition.TOP_LEFT].push(...[window.google.maps.ControlPosition.BOTTOM_LEFT,]);
     changeDirection(origin, destination);
   };
-  
+
   const changeDirection = (origin, destination) => {
     directionsService.route(
       {
@@ -330,24 +333,16 @@ const MapView = (coordinates) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
           setDirections(result);
           var directionsData = result.routes[0].legs[0];
-          var distanceinKM = directionsData.distance.text 
-          var tripTimeinMins = directionsData.duration.text 
+          distanceinKM = directionsData.distance.text
+          tripTimeinMins = directionsData.duration.text
         } else {
           console.error(`Error fetching directions ${status}`);
         }
+        
       }
     );
   };
-  const waterStyle = [
-    {
-      featureType: "water",
-      elementType: "geometry.fill",
-      stylers: [
-        {
-          color: "#4BB4F5",
-        },
-      ],
-    },]
+
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading maps</div>;
@@ -359,12 +354,12 @@ const MapView = (coordinates) => {
         onLoad={(map) => onMapLoad(map)}
         mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '20px' }}
         options={{
-          styles: styles['retro'],
-          fullscreenControl: false,
+          styles: styles['retro']
         }}
       >
         {directions && <DirectionsRenderer directions={directions} />}
       </GoogleMap>
+      
   );
 };
 
