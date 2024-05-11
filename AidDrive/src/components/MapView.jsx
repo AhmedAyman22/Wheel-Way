@@ -5,7 +5,7 @@ const defaultLocation = { lat: 30.0444, lng: 31.2357 };
 let directionsService;
 
 export let distanceinKM = null;
-export let tripTimeinMins = null;
+export let tripDurationinMins = null;
 
 const apiKey = "AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI";
 const libraries = ['places', 'directions'];
@@ -334,7 +334,7 @@ const MapView = (coordinates) => {
           setDirections(result);
           var directionsData = result.routes[0].legs[0];
           distanceinKM = directionsData.distance.text
-          tripTimeinMins = directionsData.duration.text
+          tripDurationinMins = directionsData.duration.text
         } else {
           console.error(`Error fetching directions ${status}`);
         }
@@ -342,7 +342,6 @@ const MapView = (coordinates) => {
       }
     );
   };
-
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading maps</div>;
