@@ -235,7 +235,7 @@ const BookingPage = () => {
       { blurOverlay && (
   <div
     id="overlay"
-    className={' z-50 filter blur-[200px] bg-whitish opacity-60 w-screen h-screen '}
+    className={'z-50 filter blur-[200px] bg-whitish opacity-60 w-screen h-screen'}
   ></div>
 )}
 {isPopupOpen && (
