@@ -4,8 +4,9 @@ import MainLayout from './layouts/MainLayout';
 import JoinUs from './pages/JoinUs';
 import JoinCaptain from './pages/JoinCaptain';
 import BookingPage from './pages/BookingPage';
-import SignupPage from './pages/SignupPage';
-
+import CaptainSignupPage from './pages/CaptainSignupPage';
+import JoinRider from './pages/JoinRider';
+import RiderSignupPage from './pages/RiderSignupPage';
 
 
 const router = createBrowserRouter(
@@ -15,7 +16,9 @@ const router = createBrowserRouter(
       <Route path='/join' element={<JoinUs />}/>
       <Route path='/join/captain/' element={<JoinCaptain />}/>
       <Route path='/booking' element={<BookingPage />}/>
-      <Route path='/join/captain/signup' element={<SignupPage />}/>
+      <Route path='/join/captain/signup' element={<CaptainSignupPage />}/>
+      <Route path='/join/rider/' element={<JoinRider />}/>
+      <Route path='/join/rider/signup' element={<RiderSignupPage />}/>
     </Route>
   )
 );
