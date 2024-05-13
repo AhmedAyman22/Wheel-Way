@@ -37,7 +37,7 @@ const Home = () => {
     </ul>
     </div>
     <img src={hero} className='sm:visible invisible w-[650px] h-[600px] rounded-[20px] absolute top-[230px] left-[1100px]'/>
-    <button className=' hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 w-[150px] h-[50px] bg-primary text-whitish font-bold hover:font-medium rounded-full absolute sm:bottom-[50px] left-[220px] bottom-[-280px] sm:left-[500px]'>ORDER NOW</button>
+    <button className=' hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 w-[200px] h-[60px] bg-accent text-primary font-bold hover:font-bold text-[24px]  rounded-[10px] absolute sm:bottom-[50px] left-[220px] bottom-[-280px] sm:left-[500px]'>ORDER NOW</button>
     </div>
     
     </>

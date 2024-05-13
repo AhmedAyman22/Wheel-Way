@@ -127,7 +127,7 @@ const CaptainSignupPage = () => {
           </ul>
           <label htmlFor="fileUploader" className='text-primary text-[14px] font-bold relative top-[46%] left-[32%] select-none '>PNG and JPG formats only</label>
           <input ref={fileInputRef} type="file" id='fileInput' onChange={handleFileChange} required multiple accept='.pdf,.jpg,.png' className=' text-transparent w-[400px] file:bg-primary file:h-[50px] file:w-[120px] file:border-none file:relative file:top-[50%] file:left-[50%] file:-translate-x-1/2  h-[200px] outline-dashed outline-primary rounded-[10px] relative left-[50%] top-[27%] -translate-x-1/2 -translate-y-1/2 file:cursor-pointer file:rounded-[5px] file:font-bold file:hover:-translate-y-[30px] file:hover:scale-110 file:transition file:ease-in-out file:delay-150 file:hover:text-whitish file:text-whitish'/>
-          <ul  className=' w-[390px] text-primary display:inline-block; text-[14px] font-bold relative bottom-[29%] left-[12%] text-primary font-bold text-[14px] text-wrap'>
+          <ul  className=' w-[390px] text-primary display:inline-block; text-[14px] font-bold relative bottom-[27%] left-[12%] text-primary font-bold text-[14px] text-wrap'>
               {Object.values(uploadedFiles).map(file => (
                 <li key={file.Name}>
                   {file.Name.length > 50
@@ -136,7 +136,7 @@ const CaptainSignupPage = () => {
                 </li>
               ))}
             </ul>
-          <button type='submit' className='w-[250px] h-[80px] bg-accent rounded-[10px] font-bold text-primary text-[20px] translate-y-4 drop-shadow-md fixed bottom-24 right-20 transform -translate-x-1/2 -translate-y-1 hover:scale-110 transition ease-in-out delay-150 z-50'>SUBMIT</button>
+          <button type='submit' className='w-[250px] h-[80px] bg-accent rounded-[10px] font-bold text-primary text-[20px] translate-y-4 drop-shadow-md fixed bottom-25 right-20 transform -translate-x-1/2 -translate-y-1 hover:scale-110 transition ease-in-out delay-150 z-50'>SUBMIT</button>
 
         </form>
       </div>
