@@ -1,7 +1,3 @@
-/*
-'REMOVED_SECRET'
-*/
-
 import React, { useState, useEffect } from 'react';
 import {Geocode, setKey} from 'react-geocode';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
