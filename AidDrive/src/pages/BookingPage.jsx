@@ -1,7 +1,3 @@
-/*
-'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'
-*/
-
 import React, { useState, useEffect } from 'react';
 import {Geocode, setKey} from 'react-geocode';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';

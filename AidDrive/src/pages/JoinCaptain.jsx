@@ -1,4 +1,5 @@
 import captainHero from '../assets/images/captain-join.jpeg'
+import {Link} from 'react-router-dom';
 
 const JoinCaptain = () => {
     return (
@@ -44,8 +45,11 @@ const JoinCaptain = () => {
       <p className='relative left-[130px] '>Join AidDrive today and drive with purpose. Together, we’ll create a world where everyone can move forward, one ride at a time.</p>
       </div>
       <img src={captainHero} className='sm:visible invisible w-[550px] h-[550px] rounded-[20px] relative inline-block left-[1150px] bottom-[570px] drop-shadow-lg'/>
-      <button className=' hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 w-[220px] drop-shadow-lg
-       h-[70px] bg-accent text-primary hover:text-whitish hover:font-bold font-bold text-[28px] hover:font-medium rounded-[5px] absolute sm:bottom-[50px] left-[220px] bottom-[0px] sm:left-[1330px]'>JOIN NOW</button>
+      
+      <div className=' hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 w-[220px] drop-shadow-lg
+       h-[70px] bg-accent text-primary hover:text-whitish hover:font-bold font-bold text-[28px] hover:font-medium rounded-[5px] absolute sm:bottom-[50px] left-[220px] bottom-[0px] sm:left-[1330px]'>
+      <Link to="/join/captain/signup" className='relative top-[20%] left-[15%] '>JOIN NOW</Link>
+       </div>
       </div>
       
       </>

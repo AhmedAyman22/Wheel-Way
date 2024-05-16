@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import uniqid from 'uniqid';
 import fileDelete from '../assets/images/file-remove.png';
+import {Link} from 'react-router-dom';
 
 const CaptainSignupPage = () => {
   const [password, setPassword] = useState("");
@@ -22,7 +23,6 @@ const CaptainSignupPage = () => {
       alert('Password must be at least 6 characters long, contain at least one special character, one uppercase letter, and one lowercase letter.');
       return;
     }
-
     if (password !== passwordConfirm) {
       alert('Please make sure to write the password twice identically!');
     } else {
@@ -136,9 +136,9 @@ const CaptainSignupPage = () => {
                 </li>
               ))}
             </ul>
-          <button type='submit' className='w-[250px] h-[80px] bg-accent rounded-[10px] font-bold text-primary text-[20px] translate-y-4 drop-shadow-md fixed bottom-25 right-20 transform -translate-x-1/2 -translate-y-1 hover:scale-110 transition ease-in-out delay-150 z-50'>SUBMIT</button>
-
+          <button type='submit' className='w-[250px] h-[80px] bg-accent rounded-[10px] font-bold text-primary text-[20px] translate-y-4 drop-shadow-md fixed bottom-28 right-20 transform -translate-x-1/2 -translate-y-1 hover:scale-110 transition ease-in-out delay-150 z-50'>SUBMIT</button>
         </form>
+        <Link to='/login'className='font-bold text-[14px] text-blue-700 hover:text-blue-500 fixed bottom-[5%] left-[50%] transform -translate-x-1/2'>Already have an account?</Link>
       </div>
     </div>
   );

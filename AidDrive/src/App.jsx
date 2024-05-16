@@ -7,7 +7,7 @@ import BookingPage from './pages/BookingPage';
 import CaptainSignupPage from './pages/CaptainSignupPage';
 import JoinRider from './pages/JoinRider';
 import RiderSignupPage from './pages/RiderSignupPage';
-
+import LoginPage from './pages/LoginPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +19,7 @@ const router = createBrowserRouter(
       <Route path='/join/captain/signup' element={<CaptainSignupPage />}/>
       <Route path='/join/rider/' element={<JoinRider />}/>
       <Route path='/join/rider/signup' element={<RiderSignupPage />}/>
+      <Route path='/login' element={<LoginPage />}/>
     </Route>
   )
 );
