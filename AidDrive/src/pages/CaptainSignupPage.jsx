@@ -3,6 +3,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import uniqid from 'uniqid';
 import fileDelete from '../assets/images/file-remove.png';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 const CaptainSignupPage = () => {
   const [password, setPassword] = useState("");
@@ -11,7 +12,7 @@ const CaptainSignupPage = () => {
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
 
-  const formSubmission = (event) => {
+  const formSubmission = async(event) => {
     event.preventDefault();
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
@@ -35,22 +36,29 @@ const CaptainSignupPage = () => {
       if (!captchaValue) {
         alert('Please verify the reCAPTCHA!');
       } else {
+        try {
+          const response = await axios.post('http://localhost:3001/api/captain/signup', { firstName, lastName, email, password });
+                      console.log(response.data);
+        } catch (error) {
+            console.error('There was an error signing up:', error);
+        }
         alert('Form submission successful!');
       }
     }
+    
   };
 
   const validatePassword = (password) => {
     const minLength = 6;
-    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+   /* const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
     const capitalLetterPattern = /[A-Z]/;
     const smallLetterPattern = /[a-z]/;
 
-    if (password.length < minLength) return false;
     if (!specialCharPattern.test(password)) return false;
     if (!capitalLetterPattern.test(password)) return false;
     if (!smallLetterPattern.test(password)) return false;
-
+    */
+    if (password.length < minLength) return false;
     return true;
   };
 

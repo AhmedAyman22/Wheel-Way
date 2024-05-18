@@ -1,5 +1,6 @@
-import {Route, createBrowserRouter, createRoutesFromElements, RouterProvider} from  'react-router-dom';
-import HomePage from './pages/HomePage'
+import React from 'react';
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 import MainLayout from './layouts/MainLayout';
 import JoinUs from './pages/JoinUs';
 import JoinCaptain from './pages/JoinCaptain';
@@ -9,28 +10,32 @@ import JoinRider from './pages/JoinRider';
 import RiderSignupPage from './pages/RiderSignupPage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
+import TripDetailsPage from './pages/TripHistoryPage';
+import { UserProvider } from './backend/userinfo'; // Corrected the import path
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element= {<MainLayout />}>
-      <Route index element={<HomePage />}/>
-      <Route path='/join' element={<JoinUs />}/>
-      <Route path='/join/captain/' element={<JoinCaptain />}/>
-      <Route path='/booking' element={<BookingPage />}/>
-      <Route path='/join/captain/signup' element={<CaptainSignupPage />}/>
-      <Route path='/join/rider/' element={<JoinRider />}/>
-      <Route path='/join/rider/signup' element={<RiderSignupPage />}/>
-      <Route path='/login' element={<LoginPage />}/>
-      <Route path='/*' element={<NotFoundPage />}/>
-
+    <Route path='/' element={<MainLayout />}>
+      <Route index element={<HomePage />} />
+      <Route path='/join' element={<JoinUs />} />
+      <Route path='/join/captain/' element={<JoinCaptain />} />
+      <Route path='/booking' element={<BookingPage />} />
+      <Route path='/join/captain/signup' element={<CaptainSignupPage />} />
+      <Route path='/join/rider/' element={<JoinRider />} />
+      <Route path='/join/rider/signup' element={<RiderSignupPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/trips' element={<TripDetailsPage />} />
+      <Route path='/*' element={<NotFoundPage />} />
     </Route>
   )
 );
+
 const App = () => {
   return (
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
+  );
+};
 
-  )
-}
-
-export default App
+export default App;
