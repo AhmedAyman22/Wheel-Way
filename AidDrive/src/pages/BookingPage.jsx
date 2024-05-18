@@ -94,17 +94,16 @@ const BookingPage = () => {
     if(RideClass == 'Default'){
       alert('Please Choose a Ride Class!');
     }
-    else{      
+    else{
+      setSelectedRide(selectedRide === null ? {} : null);
       if(RideClass != 'Default'){
-        setSelectedRide(selectedRide === null ? {} : null);
         tripDuration = parseFloat(tripDurationinMins.split(' ')[0]);
         tripDistance = parseFloat(distanceinKM.split(' ')[0]);
         tripDuration = parseFloat(tripDuration.toFixed(2));
         tripDistance = parseFloat(tripDistance.toFixed(2));
-        console.log('tripDistance',tripDistance);
         tripPrice = (BasePrice + (KMPrice*tripDistance) + (minutePrice+tripDuration)) * multiplier;
         if(tripPrice<minimumPrice){tripPrice = minimumPrice;};
-        var newID = uniqid('Trip_')
+        var newID = uniqid('Trip_');
         var rideClass = '';
         if(RideClass == 'BasicClass'){
           rideClass  = 'Basic';
@@ -119,14 +118,22 @@ const BookingPage = () => {
         const updatedTripDetails = {
           ...tripDetails,
           [newID]: {
+            pickupLat: pickupCoordinates?.lat,
+            pickupLng: pickupCoordinates?.lng,
+            dropoffLat: dropoffCoordinates?.lat,
+            dropoffLng: dropoffCoordinates?.lng,
+            Pickup:pickupAddress.label,
+            Dropoff:dropoffAddress.label,
             Class: rideClass,
             Duration: tripDurationinMins,
             Distance: tripDistance,
             Price: tripPrice,
             Date: Date(),
+            Status:''
           },
         };
         setID(newID);
+        console.log('Trip Details:',updatedTripDetails);
         setTripDetails(updatedTripDetails);
         enablePopup();
       }

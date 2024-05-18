@@ -8,6 +8,7 @@ import CaptainSignupPage from './pages/CaptainSignupPage';
 import JoinRider from './pages/JoinRider';
 import RiderSignupPage from './pages/RiderSignupPage';
 import LoginPage from './pages/LoginPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,8 @@ const router = createBrowserRouter(
       <Route path='/join/rider/' element={<JoinRider />}/>
       <Route path='/join/rider/signup' element={<RiderSignupPage />}/>
       <Route path='/login' element={<LoginPage />}/>
+      <Route path='/*' element={<NotFoundPage />}/>
+
     </Route>
   )
 );
