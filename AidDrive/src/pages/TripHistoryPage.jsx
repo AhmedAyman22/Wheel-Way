@@ -13,6 +13,9 @@ const TripHistoryPage = () => {
     </div>
     <div className='bg-whitish w-[55%] h-[550px] rounded-[5px] fixed left-[25%] top-[10%]'>
     <TripsCard />
+    <TripsCard />
+    <TripsCard />
+    <TripsCard />
     </div>
     </div>
 </>
