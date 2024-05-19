@@ -106,14 +106,13 @@ const BookingPage = () => {
         var newID = uniqid('Trip_');
         var rideClass = '';
         if(RideClass == 'BasicClass'){
-          rideClass  = 'Basic';
-        
+          rideClass  = 'basic';
         }
         else if (RideClass == 'VanClass'){
-          rideClass  = 'Van';
+          rideClass  = 'van';
         }
         else if (RideClass == 'VipClass'){
-          rideClass  = 'VIP';
+          rideClass  = 'vip';
         };
         const updatedTripDetails = {
           ...tripDetails,
