@@ -34,7 +34,7 @@ const LoginPage = () => {
                         <input id="email" type="email" required maxLength="32" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
                         <p className='m-0 font-bold text-primary pl-10 mt-5'>Password:</p>
                         <input id="password" type="password" required minLength='6' maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
-                        <a href="#" className='text-blue-700 text-[14px] font-bold relative top-[2%] left-[10%]'>Forgot Password?</a>
+                        <a href="#" className='text-blue-700 text-[14px] font-bold relative top-[2%] left-[8%]'>Forgot Password?</a>
                         <div className='relative left-[10%] top-[4%]'>
                             <p className='text-[16px] font-bold text-primary mb-1'>Account Type:</p>
                             <label className='text-[15px] font-bold text-primary'>
