@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [accountType, setAccountType] = useState('');
   const recaptcha = useRef(null);
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { setUser, setUserId } = useContext(UserContext); // Destructure setUserId from UserContext
 
   const submitLogin = async (event) => {
     event.preventDefault();
@@ -23,8 +23,11 @@ const LoginPage = () => {
       const password = document.getElementById("password").value;
       try {
         const response = await axios.post('http://localhost:3001/api/login', { email, password, accountType });
-        const userName = response.data.first_name;
-        setUser(userName); // Store username in context
+        const user = response.data.first_name; // Assuming the response includes userId
+        setUser(user); // Store userId in context
+        const userId = response.data.user_id; // Assuming the response includes userId
+        setUserId(userId); // Store userId in context
+        console.log(userId);
         alert('Form submission successful!');
         navigate('/booking'); // Redirect to booking page
       } catch (error) {

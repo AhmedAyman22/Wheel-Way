@@ -1,82 +1,72 @@
-const mysql = require('mysql');
+import { Router } from 'express';
 
-// Create a MySQL connection
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'your_username',
-  password: 'your_password',
-  database: 'your_database',
-});
+const router = Router();
 
-// Connect to the database
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to database:', err);
-    return;
+router.post('/', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const pool = req.app.get('pool');
+
+    if (email && password) {
+      const table = 'admin_table'; // Adjust this to the actual admin table name
+      const idField = 'admin_id'; // Adjust this to the actual field name for the admin ID
+
+      // Execute SQL query to select the account from the admin table
+      const [results] = await pool.query(`SELECT * FROM ${table} WHERE email = ? AND password = ?`, [email, password]);
+
+      // If the account exists
+      if (results.length > 0) {
+        const user = results[0];
+
+        // Authenticate the user and include the ID and first name in the response
+        res.status(200).json({ message: 'Login successful!', id: user[idField], first_name: user.first_name });
+      } else {
+        res.status(401).json({ message: 'Incorrect Email and/or Password!' });
+      }
+    } else {
+      res.status(400).json({ message: 'Please enter Email and Password!' });
+    }
+  } catch (err) {
+    console.error('Error during login:', err);
+    res.status(500).json({ message: 'Server error. Please try again later.' });
   }
-  console.log('Connected to database');
 });
 
-// Query to add a new admin user
-const addAdminQuery = `
-  INSERT INTO user_table (username, password, email, role)
-  VALUES (?, ?, ?, 'admin')
-`;
+router.post('/admin/update', async (req, res) => {
+  try {
+    const { user_id, driver_id, first_name, last_name, email, password } = req.body;
+    const pool = req.app.get('pool');
 
-// Query to update user details
-const updateUserQuery = `
-  UPDATE user_table
-  SET username = ?, email = ?
-  WHERE user_id = ?
-`;
+    if (user_id && driver_id && first_name && last_name && email && password) {
+      // Start a transaction
+      await pool.beginTransaction();
 
-// Query to delete a user
-const deleteUserQuery = `
-  DELETE FROM user_table
-  WHERE user_id = ?
-`;
+      // Update user_table
+      await pool.query(`
+        UPDATE user_table
+        SET first_name = ?, last_name = ?, email = ?, password = ?
+        WHERE user_id = ?
+      `, [first_name, last_name, email, password, user_id]);
 
-// Query to update driver details
-const updateDriverQuery = `
-  UPDATE driver_table
-  SET driver_name = ?, driver_license = ?
-  WHERE driver_id = ?
-`;
+      // Update driver_table
+      await pool.query(`
+        UPDATE driver_table
+        SET first_name = ?, last_name = ?, email = ?, password = ?
+        WHERE driver_id = ?
+      `, [first_name, last_name, email, password, driver_id]);
 
-// Query to delete a driver
-const deleteDriverQuery = `
-  DELETE FROM driver_table
-  WHERE driver_id = ?
-`;
+      // Commit the transaction
+      await pool.commit();
 
-// Query to update ride details
-const updateRideQuery = `
-  UPDATE rides_table
-  SET destination = ?, fare = ?
-  WHERE ride_id = ?
-`;
-
-// Query to delete a ride
-const deleteRideQuery = `
-  DELETE FROM rides_table
-  WHERE ride_id = ?
-`;
-
-
-connection.query(updateUserQuery, ['new_username', 'new_email', 1], (err, results) => {
-   if (err) {
-    console.error('Error updating user:', err);
-    return;
+      res.status(200).json({ message: 'User and Driver details updated successfully!' });
+    } else {
+      res.status(400).json({ message: 'Please provide all required fields: user_id, driver_id, first_name, last_name, email, password' });
+    }
+  } catch (err) {
+    // Rollback the transaction in case of an error
+    console.error('Error updating user and driver:', err);
+    res.status(500).json({ message: 'Server error. Please try again later.' });
   }
-  console.log('User updated successfully');
 });
 
-connection.query(deleteUserQuery, [1], (err, results) => {
-  if (err) {
-    console.error('Error deleting user:', err);
-    return;
-  }
-  console.log('User deleted successfully');
-});
-
-connection.end();
+export default router;

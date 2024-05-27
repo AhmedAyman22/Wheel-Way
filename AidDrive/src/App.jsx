@@ -11,7 +11,10 @@ import RiderSignupPage from './pages/RiderSignupPage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import TripDetailsPage from './pages/TripHistoryPage';
-import { UserProvider } from './backend/userinfo'; // Corrected the import path
+import { UserProvider } from './pages/userinfo';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import DriverDashboard from './pages/driverdashboard';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +29,10 @@ const router = createBrowserRouter(
       <Route path='/login' element={<LoginPage />} />
       <Route path='/trips' element={<TripDetailsPage />} />
       <Route path='/*' element={<NotFoundPage />} />
+      <Route path='/admin/login' element={<AdminLogin />}/>
+      <Route path='/admin/dashboard' element={<AdminDashboard />}/>
+      <Route path='/booking/driver' element={<DriverDashboard />}/>
+      
     </Route>
   )
 );

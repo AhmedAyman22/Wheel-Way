@@ -7,6 +7,10 @@ import riderRoutes from './backend/ridersignup.js';
 import bookingRoutes from './backend/bookingdata.js';
 import loginRoutes from './backend/rider_Login.js'; // Ensure the correct import
 import tripRoutes from './backend/Tripdetails.js';
+import adminRoutes from './backend/admin.js';
+import searchRoutes from './backend/edit.js';
+import updateRoutes from './backend/update.js';
+
 const app = express();
 
 app.use(bodyParser.json()); 
@@ -28,6 +32,9 @@ app.use('/api/rider', riderRoutes);
 app.use('/booking', bookingRoutes);
 app.use('/api/login', loginRoutes); 
 app.use('/trip-details',tripRoutes);
+app.use('/api/admin/login', adminRoutes); 
+app.use('/api/admin/search', searchRoutes); 
+app.use('/api/admin/search', updateRoutes); 
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Server listening on port ${port}`));

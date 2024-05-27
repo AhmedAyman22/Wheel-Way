@@ -5,12 +5,27 @@ const router = express.Router();
 // Route to handle booking creation
 router.post('/booking', async (req, res) => {
   const pool = req.app.get('pool');
-  const { pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, Status } = req.body;
+  const {
+    pickupLat,
+    pickupLng,
+    dropoffLat,
+    dropoffLng,
+    Pickup,
+    Dropoff,
+    Class,
+    Duration,
+    Distance,
+    Price,
+    Date
+  } = req.body;
+
+  // Set default status to 'pending'
+  const status = 'pending';
 
   try {
     const [rows] = await pool.query(
       'INSERT INTO rides_Table (pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, Status]
+      [pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, status]
     );
     res.status(201).json({ id: rows.insertId });
   } catch (error) {
