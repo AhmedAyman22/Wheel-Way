@@ -10,36 +10,35 @@ const CaptainSignupPage = () => {
   const [uploadedFiles, setUploadedFiles] = useState({});
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
+  const [mobileNumber, setMobileNumber] = useState('');
 
   const formSubmission = (event) => {
     event.preventDefault();
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
+    var mobile = document.getElementById("mobileNumber").value;
     var password = document.getElementById("password").value;
-    var passwordConfirm = document.getElementById("passwordConfirmation").value;
 
     if (!validatePassword(password)) {
       alert('Password must be at least 6 characters long, contain at least one special character, one uppercase letter, and one lowercase letter.');
       return;
     }
-    if (password !== passwordConfirm) {
-      alert('Please make sure to write the password twice identically!');
-    } else {
-      console.log('firstName', firstName);
-      console.log('lastName', lastName);
-      console.log('email', email);
-      console.log('password', password);
-      console.log('passwordConfirm', passwordConfirm);
-      const captchaValue = recaptcha.current?.getValue();
-      if (!captchaValue) {
-        alert('Please verify the reCAPTCHA!');
-      } else {
-        alert('Form submission successful!');
-      }
-    }
-  };
 
+    const captchaValue = recaptcha.current?.getValue();
+    if (!captchaValue) {
+      alert('Please verify the reCAPTCHA!');
+    } else {
+      alert('Form submission successful!');
+    }
+  }
+  
+  const validateMobile = (e) => {
+    const value = e.target.value;
+    // Remove non-numeric characters
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setMobileNumber(numericValue);
+  };
   const validatePassword = (password) => {
     const minLength = 6;
     const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
@@ -110,10 +109,10 @@ const CaptainSignupPage = () => {
           <input id="lastName" type="text" required minLength='3' maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
           <p className='m-0 font-bold text-primary pl-10 mt-5'>Email Address:</p>
           <input id="email" type="email" required maxLength="32" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
+          <p className='m-0 font-bold text-primary pl-10 mt-5'>Mobile Number:</p>
+          <input id="mobileNumber" value={mobileNumber} onChange = {validateMobile} defaultCountry="EG" required minLength='11' type="tel" maxLength="14" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
           <p className='m-0 font-bold text-primary pl-10 mt-5'>Password:</p>
           <input id="password" type="password" required minLength='6' maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
-          <p className='m-0 font-bold text-primary pl-10 mt-5'>Confirm Password:</p>
-          <input id="passwordConfirmation" required minLength='6' type="password" maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
           <ReCAPTCHA ref={recaptcha} className='font-bold text-primary text-[20px] drop-shadow-md relative mt-10 left-[70%] -translate-x-1/2' sitekey='6Leq7NkpAAAAAE6hXaxuatEfTBjxJ2fJIXr99zCx' />
         </form>
         <form onSubmit={formSubmission} className=' bg-secondary h-[550px] w-[500px] rounded-[20px] absolute right-20 inline-block'>
