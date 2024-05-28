@@ -12,6 +12,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import TripHuntingPage from './pages/TripHuntingPage';
 import AccountSettingPage from './pages/AccountSettingPage';
 import TripHistoryPage from './pages/TripHistoryPage';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 const router = createBrowserRouter(
@@ -28,6 +30,8 @@ const router = createBrowserRouter(
       <Route path='/triphunting' element={<TripHuntingPage />}/>
       <Route path='/account' element={<AccountSettingPage />}/>
       <Route path='/trips' element={<TripHistoryPage />}/>
+      <Route path='/admin/login' element={<AdminLogin />}/>
+      <Route path='/admin/dashboard' element={<AdminDashboard />}/>
       <Route path='/*' element={<NotFoundPage />}/>
       
 
