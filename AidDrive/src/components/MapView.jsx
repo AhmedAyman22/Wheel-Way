@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoogleMap, DirectionsRenderer, useLoadScript } from "@react-google-maps/api";
 
 const defaultLocation = { lat: 30.0444, lng: 31.2357 };
@@ -306,10 +306,22 @@ const styles = {
 const MapView = (coordinates) => {
   coordinates = coordinates.coordinates
   const [directions, setDirections] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: apiKey,
     libraries,
   });
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    }
+  }, []);
 
   let origin = { lat: parseFloat(coordinates.pickupLat), lng: parseFloat(coordinates.pickupLng) };
   let destination = { lat: parseFloat(coordinates.dropoffLat), lng: parseFloat(coordinates.dropoffLng) };
@@ -348,7 +360,7 @@ const MapView = (coordinates) => {
   
   return (
       <GoogleMap
-        center={origin ? origin : defaultLocation}
+      center={origin ? origin : currentLocation || { lat: 0, lng: 0 }}
         zoom={destination ? 13 : 14}
         onLoad={(map) => onMapLoad(map)}
         mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '20px' }}
