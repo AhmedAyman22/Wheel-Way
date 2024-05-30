@@ -14,7 +14,7 @@ import AccountSettingPage from './pages/AccountSettingPage';
 import TripHistoryPage from './pages/TripHistoryPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
-
+import MapView from './components/MapView';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +32,8 @@ const router = createBrowserRouter(
       <Route path='/trips' element={<TripHistoryPage />}/>
       <Route path='/admin/login' element={<AdminLogin />}/>
       <Route path='/admin/dashboard' element={<AdminDashboard />}/>
+      <Route path='/map' element={<MapView />}/>
+
       <Route path='/*' element={<NotFoundPage />}/>
       
 

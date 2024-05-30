@@ -5,12 +5,12 @@ import fileDelete from '../assets/images/file-remove.png';
 import {Link} from 'react-router-dom';
 
 const CaptainSignupPage = () => {
+  const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState({});
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
-  const [mobileNumber, setMobileNumber] = useState('');
+
 
   const formSubmission = (event) => {
     event.preventDefault();
