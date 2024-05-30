@@ -9,6 +9,7 @@ const RiderSignupPage = () => {
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState({});
+  const [mobileNumber, setMobileNumber] = useState('');
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
 
@@ -47,6 +48,12 @@ const RiderSignupPage = () => {
       }
     }
     
+  };
+  const validateMobile = (e) => {
+    const value = e.target.value;
+    // Remove non-numeric characters
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setMobileNumber(numericValue);
   };
 
   const validatePassword = (password) => {
@@ -119,10 +126,10 @@ const RiderSignupPage = () => {
           <input id="lastName" type="text" required minLength='3' maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
           <p className='m-0 font-bold text-primary pl-10 mt-5'>Email Address:</p>
           <input id="email" type="email" required maxLength="32" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
+          <p className='m-0 font-bold text-primary pl-10 mt-5'>Mobile Number:</p>
+          <input id="mobileNumber" value={mobileNumber} onChange = {validateMobile} defaultCountry="EG" required minLength='11' type="tel" maxLength="14" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
           <p className='m-0 font-bold text-primary pl-10 mt-5'>Password:</p>
           <input id="password" type="password" required minLength='6' maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
-          <p className='m-0 font-bold text-primary pl-10 mt-5'>Confirm Password:</p>
-          <input id="passwordConfirmation" required minLength='6' type="password" maxLength="16" className='w-[420px] h-[30px] ring-[3px] ring-accent rounded-[2px] relative mt-2 ml-10 hover:-translate-y-1 transition ease-in-out delay-150' />
           <ReCAPTCHA ref={recaptcha} className='font-bold text-primary text-[20px] drop-shadow-md relative mt-10 left-[70%] -translate-x-1/2' sitekey='6Leq7NkpAAAAAE6hXaxuatEfTBjxJ2fJIXr99zCx' />
         </form>
         <form onSubmit={formSubmission} className=' bg-secondary h-[550px] w-[500px] rounded-[20px] absolute right-20 inline-block'>

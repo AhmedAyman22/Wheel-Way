@@ -15,6 +15,8 @@ import { UserProvider } from './pages/userinfo';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import DriverDashboard from './pages/driverdashboard';
+import TripHuntingPage from './pages/TripHuntingPage';
+import AccountSettingPage from './pages/AccountSettingPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +29,8 @@ const router = createBrowserRouter(
       <Route path='/join/rider/' element={<JoinRider />} />
       <Route path='/join/rider/signup' element={<RiderSignupPage />} />
       <Route path='/login' element={<LoginPage />} />
+      <Route path='/triphunting' element={<TripHuntingPage />}/>
+      <Route path='/account' element={<AccountSettingPage />}/>
       <Route path='/trips' element={<TripDetailsPage />} />
       <Route path='/*' element={<NotFoundPage />} />
       <Route path='/admin/login' element={<AdminLogin />}/>
