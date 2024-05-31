@@ -23,11 +23,11 @@ const LoginPage = () => {
       const password = document.getElementById("password").value;
       try {
         const response = await axios.post('http://localhost:3001/api/login', { email, password, accountType });
+        const userId = response.data.id; // Assuming the response includes userId
+        setUserId(userId); // Store userId in context
         const user = response.data.first_name; // Assuming the response includes userId
         setUser(user); // Store userId in context
-        const userId = response.data.user_id; // Assuming the response includes userId
-        setUserId(userId); // Store userId in context
-        console.log(userId);
+        console.log(userId,user);
         alert('Form submission successful!');
         navigate('/booking'); // Redirect to booking page
       } catch (error) {

@@ -14,7 +14,6 @@ import TripDetailsPage from './pages/TripHistoryPage';
 import { UserProvider } from './pages/userinfo';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
-import DriverDashboard from './pages/driverdashboard';
 import TripHuntingPage from './pages/TripHuntingPage';
 import AccountSettingPage from './pages/AccountSettingPage';
 
@@ -35,7 +34,6 @@ const router = createBrowserRouter(
       <Route path='/*' element={<NotFoundPage />} />
       <Route path='/admin/login' element={<AdminLogin />}/>
       <Route path='/admin/dashboard' element={<AdminDashboard />}/>
-      <Route path='/booking/driver' element={<DriverDashboard />}/>
       
     </Route>
   )

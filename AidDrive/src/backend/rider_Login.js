@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
 
         if (passwordMatch) {
           // Authenticate the user and include the ID and first name in the response
-          res.status(200).json({ message: 'Login successful!', id: user[idField], first_name: user.first_name });
+          res.status(200).json({ message: 'Login successful!', id: user[idField], username: user.username });
         } else {
           res.status(401).json({ message: 'Incorrect Email and/or Password!' });
         }

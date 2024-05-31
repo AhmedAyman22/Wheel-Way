@@ -14,7 +14,7 @@ const apiKey = 'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'; // Replace with your a
 setKey(apiKey);
 
 const BookingPage = () => {
-  const { user } = useContext(UserContext);
+  const { user,userid } = useContext(UserContext);
   const [pickupAddress, setPickupAddress] = useState('');
   const [pickupCoordinates, setPickupCoordinates] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
@@ -24,7 +24,6 @@ const BookingPage = () => {
   const [blurOverlay, setBlurOverlay] = useState(false);
   const [id, setID] = useState('');
   const [tripDetails, setTripDetails] = useState({});
-  const [username, setUsername] = useState('');
 
   const BasePrice = 13;
   const KMPrice = 4;
@@ -112,7 +111,7 @@ const BookingPage = () => {
             Distance: tripDistance,
             Price: tripPrice,
             Date: new Date().toISOString().slice(0, 19).replace('T', ' '), // Correct date format for MySQL
-            Status: '',
+            Status: 'pending',
           },
         };
         setID(newID);
@@ -154,7 +153,7 @@ const BookingPage = () => {
           BOOK A TRIP
         </h1>
         <p className="text-center text-primary font-bold mt-4">
-          Welcome, {user}!
+          Welcome, {[user,userid]}!
         </p>
         <div className='absolute left-[280px] top-[250px] w-[350px] h-[450px] bg-whitish rounded-[20px] inline-block drop-shadow-lg '>
           <h2 className='text-[28px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary'>Find a trip</h2>
