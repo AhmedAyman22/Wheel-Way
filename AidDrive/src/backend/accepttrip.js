@@ -13,10 +13,10 @@ router.get('/pending-trips', async (req, res) => {
 });
 
 router.post('/accept-trip', async (req, res) => {
-  const { ride_id } = req.body;
+  const { ride_id,driver_id } = req.body;
   const pool = req.app.get('pool');
   try {
-    const [result] = await pool.query('UPDATE rides_table SET status = "accepted" WHERE ride_id = ?', [ride_id]);
+    const [result] = await pool.query('UPDATE rides_table SET  status = ?,driver_id=? WHERE ride_id = ?',  [ 'accepted', driver_id ,ride_id]);
     if (result.affectedRows === 0) {
       res.status(404).json({ error: 'Trip not found' });
     } else {

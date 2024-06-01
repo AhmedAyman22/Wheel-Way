@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
         table = 'user_table'; // Adjust this to the actual rider table name
         idField = 'user_id'; // Adjust this to the actual field name for the rider ID
       } else if (accountType === 'captain') {
-        table = 'driver_Table'; // Adjust this to the actual captain table name
+        table = 'driver_table'; // Adjust this to the actual captain table name
         idField = 'driver_id'; // Adjust this to the actual field name for the captain ID
       } else {
         return res.status(400).json({ message: 'Invalid account type!' });
@@ -32,7 +32,11 @@ router.post('/', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (passwordMatch) {
-          // Authenticate the user and include the ID and first name in the response
+          // Authenticate the user and create a session
+          req.session.userId = user[idField];
+          req.session.username = user.username;
+          req.session.accountType = accountType;
+
           res.status(200).json({ message: 'Login successful!', id: user[idField], username: user.username });
         } else {
           res.status(401).json({ message: 'Incorrect Email and/or Password!' });

@@ -16,16 +16,16 @@ router.post('/booking', async (req, res) => {
     Duration,
     Distance,
     Price,
-    Date
+    Date,
+    userid
   } = req.body;
 
   // Set default status to 'pending'
   const status = 'pending';
-
   try {
     const [rows] = await pool.query(
-      'INSERT INTO rides_Table (pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, status]
+      'INSERT INTO rides_Table (user_id,pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, Status) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [userid,pickupLat, pickupLng, dropoffLat, dropoffLng, Pickup, Dropoff, Class, Duration, Distance, Price, Date, status]
     );
     res.status(201).json({ id: rows.insertId });
   } catch (error) {

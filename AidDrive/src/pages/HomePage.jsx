@@ -43,7 +43,7 @@ const Home = () => {
     <img src={hero} className='sm:visible invisible w-[650px] h-[600px] rounded-[20px] absolute top-[230px] left-[1100px]'/>
     <div className=' hover:-translate-y-1 hover:text-whitish hover:scale-110 transition ease-in-out delay-150 w-[200px] h-[60px] bg-accent text-primary font-bold hover:font-bold text-[24px]  rounded-[5px] absolute sm:bottom-[50px] left-[220px] bottom-[-280px] sm:left-[500px]'>
       {loggedIn?
-      <Link to="/booking" className='relative top-[20%] left-[15%] '>BOOK NOW</Link>:
+      <Link to="/login" className='relative top-[20%] left-[15%] '>BOOK NOW</Link>:
       <Link to="/join" className='relative top-[20%] left-[25%] '>JOIN US</Link>
       
     }

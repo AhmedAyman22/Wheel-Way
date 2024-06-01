@@ -2,38 +2,32 @@ import React, { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import uniqid from 'uniqid';
 import fileDelete from '../assets/images/file-remove.png';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const CaptainSignupPage = () => {
   const [password, setPassword] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState({});
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
 
-  const formSubmission = async(event) => {
+  const formSubmission = async (event) => {
     event.preventDefault();
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
-    var passwordConfirm = document.getElementById("passwordConfirmation").value;
     var mobile = document.getElementById("mobileNumber").value;
 
     if (!validatePassword(password)) {
-      alert('Password must be at least 6 characters long, contain at least one special character, one uppercase letter, and one lowercase letter.');
+      alert('Password must be at least 6 characters long.');
       return;
-    }
-    if (password !== passwordConfirm) {
-      alert('Please make sure to write the password twice identically!');
     } else {
       console.log('firstName', firstName);
       console.log('lastName', lastName);
       console.log('email', email);
       console.log('password', password);
-      console.log('passwordConfirm', passwordConfirm);
       console.log('mobile', mobile);
 
       const captchaValue = recaptcha.current?.getValue();
@@ -42,26 +36,17 @@ const CaptainSignupPage = () => {
       } else {
         try {
           const response = await axios.post('http://localhost:3001/api/captain/signup', { firstName, lastName, email, password, mobile });
-                      console.log(response.data);
+          console.log(response.data);
         } catch (error) {
-            console.error('There was an error signing up:', error);
+          console.error('There was an error signing up:', error);
         }
         alert('Form submission successful!');
       }
     }
-    
   };
 
   const validatePassword = (password) => {
     const minLength = 6;
-   /* const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
-    const capitalLetterPattern = /[A-Z]/;
-    const smallLetterPattern = /[a-z]/;
-
-    if (!specialCharPattern.test(password)) return false;
-    if (!capitalLetterPattern.test(password)) return false;
-    if (!smallLetterPattern.test(password)) return false;
-    */
     if (password.length < minLength) return false;
     return true;
   };
@@ -115,6 +100,7 @@ const CaptainSignupPage = () => {
     }
     console.log('deleteFiles');
   };
+
 
   return (
     <div className='bg-primary h-[700px] w-[1300px] relative left-1/2 -translate-x-1/2 top-[4rem] shadow-2xl rounded-[50px] '>

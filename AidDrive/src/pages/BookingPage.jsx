@@ -6,7 +6,6 @@ import vanRide from '../assets/images/vanRide_icon.png';
 import vipRide from '../assets/images/vipRide_icon.png';
 import arrowRight from '../assets/images/arrow_right.png';
 import MapView, { distanceinKM, tripDurationinMins } from '../components/MapView';
-import uniqid from 'uniqid';
 import axios from 'axios';
 import { UserContext } from './userinfo';
 
@@ -14,7 +13,7 @@ const apiKey = 'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'; // Replace with your a
 setKey(apiKey);
 
 const BookingPage = () => {
-  const { user,userid } = useContext(UserContext);
+  const { user, userid } = useContext(UserContext);
   const [pickupAddress, setPickupAddress] = useState('');
   const [pickupCoordinates, setPickupCoordinates] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
@@ -22,8 +21,7 @@ const BookingPage = () => {
   const [selectedRide, setSelectedRide] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [blurOverlay, setBlurOverlay] = useState(false);
-  const [id, setID] = useState('');
-  const [tripDetails, setTripDetails] = useState({});
+  const [tripDetails, setTripDetails] = useState(null);
 
   const BasePrice = 13;
   const KMPrice = 4;
@@ -73,14 +71,6 @@ const BookingPage = () => {
     }
   }, [dropoffAddress]);
 
-  const handlePickupChange = (e) => {
-    setPickupAddress(e.target.value);
-  };
-
-  const handleDropoffChange = (e) => {
-    setDropoffAddress(e.target.value);
-  };
-
   const handleConfirm = () => {
     if (RideClass === 'Default') {
       alert('Please Choose a Ride Class!');
@@ -95,27 +85,22 @@ const BookingPage = () => {
         if (tripPrice < minimumPrice) {
           tripPrice = minimumPrice;
         }
-        const newID = uniqid('Trip_');
         const rideClass = RideClass.toLowerCase().replace('class', '');
-        const updatedTripDetails = {
-          ...tripDetails,
-          [newID]: {
-            pickupLat: pickupCoordinates?.lat,
-            pickupLng: pickupCoordinates?.lng,
-            dropoffLat: dropoffCoordinates?.lat,
-            dropoffLng: dropoffCoordinates?.lng,
-            Pickup: pickupAddress.label,
-            Dropoff: dropoffAddress.label,
-            Class: rideClass,
-            Duration: tripDurationinMins,
-            Distance: tripDistance,
-            Price: tripPrice,
-            Date: new Date().toISOString().slice(0, 19).replace('T', ' '), // Correct date format for MySQL
-            Status: 'pending',
-          },
+        const newTripDetails = {
+          pickupLat: pickupCoordinates?.lat,
+          pickupLng: pickupCoordinates?.lng,
+          dropoffLat: dropoffCoordinates?.lat,
+          dropoffLng: dropoffCoordinates?.lng,
+          Pickup: pickupAddress.label,
+          Dropoff: dropoffAddress.label,
+          Class: rideClass,
+          Duration: tripDurationinMins,
+          Distance: tripDistance,
+          Price: tripPrice,
+          Date: new Date().toISOString().slice(0, 19).replace('T', ' '), // Correct date format for MySQL
+          Status: 'pending',
         };
-        setID(newID);
-        setTripDetails(updatedTripDetails);
+        setTripDetails(newTripDetails);
         enablePopup();
       }
     }
@@ -124,16 +109,38 @@ const BookingPage = () => {
   const confirmTrip = async (event) => {
     setIsPopupOpen(false);
     setBlurOverlay(false);
-    const tripDetail = tripDetails[id];
     try {
-      const response = await axios.post('http://localhost:3001/booking/booking', tripDetail);
-      //console.log(response.data);
+      console.log('Trip Details:', tripDetails);
+      console.log('User ID:', userid);
+  
+      const response = await axios.post('http://localhost:3001/booking/booking', {
+        pickupLat: tripDetails.pickupLat,
+        pickupLng: tripDetails.pickupLng,
+        dropoffLat: tripDetails.dropoffLat,
+        dropoffLng: tripDetails.dropoffLng,
+        Pickup: tripDetails.Pickup,
+        Dropoff: tripDetails.Dropoff,
+        Class: tripDetails.Class,
+        Duration: tripDetails.Duration,
+        Distance: tripDetails.Distance,
+        Price: tripDetails.Price,
+        Date: tripDetails.Date,
+        userid: userid
+      });
+      console.log('Server Response:', response.data);
+  
+      if (response.status === 201) {
+        alert('Form submission successful!');
+      } else {
+        console.error('Error:', response.data);
+        alert('There was an error with your booking. Please try again.');
+      }
     } catch (error) {
       console.error('There was an error with your booking:', error);
+      alert('There was an error with your booking. Please try again.');
     }
-    alert('Form submission successful!');
   };
-
+  
   const enablePopup = () => {
     setIsPopupOpen(true);
     setBlurOverlay(true);
@@ -142,7 +149,7 @@ const BookingPage = () => {
   const coords = {
     pickupLat: pickupCoordinates?.lat,
     pickupLng: pickupCoordinates?.lng,
-    dropoffLat: dropoffCoordinates?.lat,
+    dropoffLat: dropoffCoordinates?.lng,
     dropoffLng: dropoffCoordinates?.lng,
   };
 
@@ -153,7 +160,7 @@ const BookingPage = () => {
           BOOK A TRIP
         </h1>
         <p className="text-center text-primary font-bold mt-4">
-          Welcome, {[user,userid]}!
+          Welcome, {user}!
         </p>
         <div className='absolute left-[280px] top-[250px] w-[350px] h-[450px] bg-whitish rounded-[20px] inline-block drop-shadow-lg '>
           <h2 className='text-[28px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary'>Find a trip</h2>
@@ -213,11 +220,12 @@ const BookingPage = () => {
             <h4 className='font-bold text-[24px] relative left-[150px] top-[10px] inline-block text-primary'>Basic Ride</h4>
             <img src={basicRide} draggable='false' className='h-[40px] relative right-[110px] top-[30px] inline-block' />
             <p className='text-[14px] relative left-[150px] inline-block text-primary'>
-              Basic car with a special-needs <br />
-              trained driver
+              4-seater car ride with a
+              <br />
+              special-needs trained driver
             </p>
             <a>
-              <img src={arrowRight} draggable='false' className='h-[30px] relative left-[170px] bottom-[20px] inline-block' />
+              <img src={arrowRight} draggable='false' className='h-[30px] relative left-[170px] bottom-[20px] inline-block cursor:pointer' />
             </a>
           </a>
 
@@ -275,10 +283,10 @@ const BookingPage = () => {
             <h3 className='text-[20px] font-bold flex items-center justify-center h-auto sm:text-[30px] mt-[30px] text-whitish '>CONFIRM TRIP?</h3>
             <h3 className='text-[20px] font-bold ml-[15px] h-auto sm:text-[20px] mt-[15px] text-whitish '>Trip Details:</h3>
             <ul className='w-[400px] h-[200px] text-whitish font-bold mt-[20px]'>
-              <li className='relative left-[40px] mt-5 '>Ride Class: {tripDetails[id].Class}</li>
-              <li className='relative left-[40px] mt-5'>Trip Distance: {tripDetails[id].Distance}KM</li>
-              <li className='relative left-[40px] mt-5'>Trip Duration: {tripDetails[id].Duration}</li>
-              <li className='relative left-[40px] mt-5'>Total Price: {tripDetails[id].Price} EGP</li>
+              <li className='relative left-[40px] mt-5 '>Ride Class: {tripDetails.Class}</li>
+              <li className='relative left-[40px] mt-5'>Trip Distance: {tripDetails.Distance}KM</li>
+              <li className='relative left-[40px] mt-5'>Trip Duration: {tripDetails.Duration}</li>
+              <li className='relative left-[40px] mt-5'>Total Price: {tripDetails.Price} EGP</li>
             </ul>
             <button
               className='h-[60px] w-[120px] bg-accent rounded-[10px] drop-shadow-md text-[20px] relative inline-block left-[200px] -translate-x-1/2 -translate-y-1/2 text-primary font-bold '

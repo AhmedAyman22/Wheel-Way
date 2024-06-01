@@ -1,4 +1,3 @@
-// src/pages/LoginPage.js
 import React, { useState, useRef, useContext } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import axios from 'axios';
@@ -9,7 +8,7 @@ const LoginPage = () => {
   const [accountType, setAccountType] = useState('');
   const recaptcha = useRef(null);
   const navigate = useNavigate();
-  const { setUser, setUserId } = useContext(UserContext); // Destructure setUserId from UserContext
+  const { setUser, setUserId } = useContext(UserContext);
 
   const submitLogin = async (event) => {
     event.preventDefault();
@@ -22,14 +21,17 @@ const LoginPage = () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       try {
-        const response = await axios.post('http://localhost:3001/api/login', { email, password, accountType });
-        const userId = response.data.id; // Assuming the response includes userId
-        setUserId(userId); // Store userId in context
-        const user = response.data.first_name; // Assuming the response includes userId
-        setUser(user); // Store userId in context
-        console.log(userId,user);
-        alert('Form submission successful!');
-        navigate('/booking'); // Redirect to booking page
+        const response = await axios.post('http://localhost:3001/api/login', { email, password, accountType }, { withCredentials: true });
+        const userId = response.data.id;
+        setUserId(userId);
+        const user = response.data.first_name;
+        setUser(user);
+
+        if (accountType === 'rider') {
+          navigate('/booking');
+        } else if (accountType === 'captain') {
+          navigate('/triphunting');
+        }
       } catch (error) {
         console.error('There was an error logging in:', error);
         alert('Incorrect Email and/or Password!');
