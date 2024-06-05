@@ -34,4 +34,4 @@ const AccountSettingPage = () => {
   )
 }
 
-export default AccountSettingPage
+export default AccountSettingPage;
