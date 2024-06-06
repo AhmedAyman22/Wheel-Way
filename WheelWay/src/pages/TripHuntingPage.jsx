@@ -146,8 +146,8 @@ const TripHuntingPage = () => {
               <li className='relative ml-16 text-[16px] mt-2'>Distance: {currentTrip.Distance} KM</li>
               <li className='relative ml-16 text-[16px] mt-2'>Price: {currentTrip.Price} EGP</li>
             </ul>
-            <img src={filledStar} className='h-[30px] fixed right-[18%] top-[22%]' />
-            <p className='h-[40px] font-bold fixed right-[11%] top-[23%] text-[18px]'>4.5</p>
+            <img src={filledStar} className='h-[30px] fixed right-[18%] top-[61%]' />
+            <p className='h-[40px] font-bold fixed right-[11%] top-[62%] text-[18px]'>4.5</p>
             <button 
               className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] left-[10%] transition ease-in-out delay-150 w-[120px] h-[50px] bg-accent text-primary font-bold hover:font-bold text-[18px] rounded-[5px]'
               onClick={() => setTripFound(false)} // Logic for declining
