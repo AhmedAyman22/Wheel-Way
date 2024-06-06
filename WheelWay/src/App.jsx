@@ -17,6 +17,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import TripHuntingPage from './pages/TripHuntingPage';
 import AccountSettingPage from './pages/AccountSettingPage';
 import DriverOngoingTrip from './pages/Driver_Ongoing_Trip';
+import RiderOngoingTrip from './pages/Rider_Ongoing_Trip';
 
 
 const router = createBrowserRouter(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
       <Route path='/account' element={<AccountSettingPage />}/>
       <Route path='/trips' element={<TripDetailsPage />} />
       <Route path='/driverOngoing' element={<DriverOngoingTrip />} />
+      <Route path='/riderOngoing' element={<RiderOngoingTrip />} />
       <Route path='/*' element={<NotFoundPage />} />
       <Route path='/admin/login' element={<AdminLogin />}/>
       <Route path='/admin/dashboard' element={<AdminDashboard />}/>

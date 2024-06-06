@@ -8,7 +8,7 @@ import accentProfile from '../assets/images/accentProfile-icon.png';
 
 const Navbar = () => {
     const [loggedIn, setLoggedIn] = useState(true);
-    const [userType, setUserType] = useState('driver');
+    const [userType, setUserType] = useState('rider');
 
     return (
         <nav className="bg-primary h-[80px] text-whitish text-2xl rounded-b-[15px] flex items-center">
@@ -29,6 +29,7 @@ const Navbar = () => {
 }
             <Link to="/account">
                 <img 
+                    draggable='false'
                     className='h-[50px] w-[50px] fixed right-[5%] top-[40px] -translate-y-1/2 cursor-pointer hover:-translate-y-1/2 hover:scale-110 transition ease-in-out delay-150 hover:bg-opacity-85' 
                     src={profileIcon} 
                     alt="profile icon"

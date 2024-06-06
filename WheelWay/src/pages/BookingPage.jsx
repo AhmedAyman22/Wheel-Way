@@ -9,12 +9,14 @@ import MapView, { distanceinKM, tripDurationinMins } from '../components/MapView
 import uniqid from 'uniqid';
 import axios from 'axios';
 import { UserContext } from './userinfo';
+import { useNavigate } from 'react-router-dom';
+import accentBack from '../assets/images/accent-back.png';
 
 const apiKey = 'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'; // Replace with your actual API key
 setKey(apiKey);
 
 const BookingPage = () => {
-  const { user,userid } = useContext(UserContext);
+  const { user, userid } = useContext(UserContext);
   const [pickupAddress, setPickupAddress] = useState('');
   const [pickupCoordinates, setPickupCoordinates] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
@@ -24,28 +26,33 @@ const BookingPage = () => {
   const [blurOverlay, setBlurOverlay] = useState(false);
   const [id, setID] = useState('');
   const [tripDetails, setTripDetails] = useState({});
+  const [rideClass, setRideClass] = useState('Default');
+  const [multiplier, setMultiplier] = useState(1);
+
+  const navigate = useNavigate();
 
   const BasePrice = 13;
   const KMPrice = 4;
   const minutePrice = 0.5;
   const minimumPrice = 16;
-  let multiplier = 1;
   let tripDuration = 0;
   let tripDistance = 0;
   let tripPrice = 0;
-  let RideClass = 'Default';
 
   const BasicClass = () => {
-    multiplier = 1;
-    RideClass = 'BasicClass';
+    setMultiplier(1);
+    setRideClass('BasicClass');
+    console.log('RideClass:', 'BasicClass');
   };
   const VanClass = () => {
-    multiplier = 1.25;
-    RideClass = 'VanClass';
+    setMultiplier(1.25);
+    setRideClass('VanClass');
+    console.log('RideClass:', 'VanClass');
   };
   const VipClass = () => {
-    multiplier = 1.5;
-    RideClass = 'VipClass';
+    setMultiplier(1.5);
+    setRideClass('VipClass');
+    console.log('RideClass:', 'VipClass');
   };
 
   const fetchCoordinates = async (address, setter) => {
@@ -82,11 +89,11 @@ const BookingPage = () => {
   };
 
   const handleConfirm = () => {
-    if (RideClass === 'Default') {
+    if (rideClass === 'Default') {
       alert('Please Choose a Ride Class!');
     } else {
       setSelectedRide(selectedRide === null ? {} : null);
-      if (RideClass !== 'Default') {
+      if (rideClass !== 'Default') {
         tripDuration = parseFloat(tripDurationinMins.split(' ')[0]);
         tripDistance = parseFloat(distanceinKM.split(' ')[0]);
         tripDuration = parseFloat(tripDuration.toFixed(2));
@@ -96,7 +103,7 @@ const BookingPage = () => {
           tripPrice = minimumPrice;
         }
         const newID = uniqid('Trip_');
-        const rideClass = RideClass.toLowerCase().replace('class', '');
+        const rideClassName = rideClass.toLowerCase().replace('class', '');
         const updatedTripDetails = {
           ...tripDetails,
           [newID]: {
@@ -106,14 +113,14 @@ const BookingPage = () => {
             dropoffLng: dropoffCoordinates?.lng,
             Pickup: pickupAddress.label,
             Dropoff: dropoffAddress.label,
-            Class: rideClass,
+            Class: rideClassName,
             Duration: tripDurationinMins,
             Distance: tripDistance,
             Price: tripPrice,
             Date: new Date().toISOString().slice(0, 19).replace('T', ' '), // Correct date format for MySQL
             Status: 'pending',
-            driverLat:0,
-            driverLng:0,
+            driverLat: 0,
+            driverLng: 0,
           },
         };
         setID(newID);
@@ -122,20 +129,27 @@ const BookingPage = () => {
       }
     }
   };
-
+  
   const confirmTrip = async (event) => {
     setIsPopupOpen(false);
     setBlurOverlay(false);
     const tripDetail = tripDetails[id];
     try {
       const response = await axios.post('http://localhost:3001/booking/booking', tripDetail);
-      //console.log(response.data);
+      var container = {
+        data: tripDetail,
+      };
+      navigate('/riderOngoing', { state: container });
     } catch (error) {
       console.error('There was an error with your booking:', error);
     }
-    alert('Form submission successful!');
   };
+  
 
+  const disablePopup = () => {
+    setIsPopupOpen(false);
+    setBlurOverlay(false);
+  };
   const enablePopup = () => {
     setIsPopupOpen(true);
     setBlurOverlay(true);
@@ -155,7 +169,7 @@ const BookingPage = () => {
           BOOK A TRIP
         </h1>
         <p className="text-center text-primary font-bold mt-4">
-          Welcome, {[user,userid]}!
+          Welcome, {[user, userid]}!
         </p>
         <div className='absolute left-[280px] top-[250px] w-[350px] h-[450px] bg-whitish rounded-[20px] inline-block drop-shadow-lg '>
           <h2 className='text-[28px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary'>Find a trip</h2>
@@ -274,13 +288,18 @@ const BookingPage = () => {
         )}
         {isPopupOpen && (
           <div className='w-[400px] h-[400px] bg-primary text-whitish z-40 absolute top-[50%] left-[50%] transform -translate-x-1/2 drop-shadow-md z-50	-translate-y-1/2 rounded-[20px]'>
+            <img 
+            src={accentBack} 
+            className='fixed left-[88%] top-[2%] cursor-pointer hover:-translate-y-1 transition ease-in-out duration-300  '
+            onClick={disablePopup}
+            draggable='false' />
             <h3 className='text-[20px] font-bold flex items-center justify-center h-auto sm:text-[30px] mt-[30px] text-whitish '>CONFIRM TRIP?</h3>
             <h3 className='text-[20px] font-bold ml-[15px] h-auto sm:text-[20px] mt-[15px] text-whitish '>Trip Details:</h3>
             <ul className='w-[400px] h-[200px] text-whitish font-bold mt-[20px]'>
-              <li className='relative left-[40px] mt-5 '>Ride Class: {tripDetails[id].Class}</li>
-              <li className='relative left-[40px] mt-5'>Trip Distance: {tripDetails[id].Distance}KM</li>
-              <li className='relative left-[40px] mt-5'>Trip Duration: {tripDetails[id].Duration}</li>
-              <li className='relative left-[40px] mt-5'>Total Price: {tripDetails[id].Price} EGP</li>
+              <li className='relative left-[40px] mt-5 '>Ride Class: {tripDetails[id]?.Class}</li>
+              <li className='relative left-[40px] mt-5'>Trip Distance: {tripDetails[id]?.Distance}KM</li>
+              <li className='relative left-[40px] mt-5'>Trip Duration: {tripDetails[id]?.Duration}</li>
+              <li className='relative left-[40px] mt-5'>Total Price: {tripDetails[id]?.Price} EGP</li>
             </ul>
             <button
               className='h-[60px] w-[120px] bg-accent rounded-[10px] drop-shadow-md text-[20px] relative inline-block left-[200px] -translate-x-1/2 -translate-y-1/2 text-primary font-bold '
