@@ -34,10 +34,13 @@ router.post('/', async (req, res) => {
         if (passwordMatch) {
           // Authenticate the user and create a session
           req.session.userId = user[idField];
-          req.session.username = user.username;
+          req.session.username = user.first_name;
           req.session.accountType = accountType;
 
-          res.status(200).json({ message: 'Login successful!', id: user[idField], username: user.username });
+          console.log('User ID:', user[idField]); // Debugging: Log the user ID
+          console.log('Session:', req.session);  // Debugging: Log the session
+
+          res.status(200).json({ message: 'Login successful!', id: user[idField], username: user.first_name });
         } else {
           res.status(401).json({ message: 'Incorrect Email and/or Password!' });
         }

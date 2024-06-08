@@ -39,7 +39,6 @@ const TripHuntingPage = () => {
       setTripFound(false);
       console.log(ride_id, userId);
     } catch (error) {
-      console.log('Ride ID:', ride_id);
       console.error('Error accepting trip:', error);
     }
   };

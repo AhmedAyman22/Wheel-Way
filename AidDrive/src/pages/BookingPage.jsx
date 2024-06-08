@@ -9,11 +9,12 @@ import MapView, { distanceinKM, tripDurationinMins } from '../components/MapView
 import axios from 'axios';
 import { UserContext } from './userinfo';
 
-const apiKey = 'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'; // Replace with your actual API key
+const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
 setKey(apiKey);
 
 const BookingPage = () => {
-  const { user, userid } = useContext(UserContext);
+  const [userId, setUserId] = useState(null); // State to store userId
+  const [username, setUsername] = useState(null); 
   const [pickupAddress, setPickupAddress] = useState('');
   const [pickupCoordinates, setPickupCoordinates] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
@@ -22,6 +23,7 @@ const BookingPage = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [blurOverlay, setBlurOverlay] = useState(false);
   const [tripDetails, setTripDetails] = useState(null);
+
 
   const BasePrice = 13;
   const KMPrice = 4;
@@ -44,6 +46,20 @@ const BookingPage = () => {
   const VipClass = () => {
     multiplier = 1.5;
     RideClass = 'VipClass';
+  };
+  useEffect(() => {
+    // Fetch userId from session when component mounts
+    fetchUserId();
+  }, []);
+
+  const fetchUserId = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/userid', { withCredentials: true });
+      setUserId(response.data.userId);
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error('Error fetching userId:', error);
+    }
   };
 
   const fetchCoordinates = async (address, setter) => {
@@ -111,7 +127,7 @@ const BookingPage = () => {
     setBlurOverlay(false);
     try {
       console.log('Trip Details:', tripDetails);
-      console.log('User ID:', userid);
+      console.log('User ID:', userId); // Use userid from context
   
       const response = await axios.post('http://localhost:3001/booking/booking', {
         pickupLat: tripDetails.pickupLat,
@@ -125,8 +141,8 @@ const BookingPage = () => {
         Distance: tripDetails.Distance,
         Price: tripDetails.Price,
         Date: tripDetails.Date,
-        userid: userid
-      });
+        userid: userId // Pass userid from context
+      }, { withCredentials: true });
       console.log('Server Response:', response.data);
   
       if (response.status === 201) {
@@ -136,10 +152,11 @@ const BookingPage = () => {
         alert('There was an error with your booking. Please try again.');
       }
     } catch (error) {
-      console.error('There was an error with your booking:', error);
+      console.error('There was an error with your booking:', error);    
       alert('There was an error with your booking. Please try again.');
     }
   };
+
   
   const enablePopup = () => {
     setIsPopupOpen(true);
@@ -160,7 +177,7 @@ const BookingPage = () => {
           BOOK A TRIP
         </h1>
         <p className="text-center text-primary font-bold mt-4">
-          Welcome, {user}!
+          Welcome,{username}
         </p>
         <div className='absolute left-[280px] top-[250px] w-[350px] h-[450px] bg-whitish rounded-[20px] inline-block drop-shadow-lg '>
           <h2 className='text-[28px] font-bold flex items-center justify-center h-auto sm:text-[36px] mt-[30px] text-primary'>Find a trip</h2>
@@ -283,7 +300,7 @@ const BookingPage = () => {
             <h3 className='text-[20px] font-bold flex items-center justify-center h-auto sm:text-[30px] mt-[30px] text-whitish '>CONFIRM TRIP?</h3>
             <h3 className='text-[20px] font-bold ml-[15px] h-auto sm:text-[20px] mt-[15px] text-whitish '>Trip Details:</h3>
             <ul className='w-[400px] h-[200px] text-whitish font-bold mt-[20px]'>
-              <li className='relative left-[40px] mt-5 '>Ride Class: {tripDetails.Class}</li>
+              <li className='relative left-[40px  ] mt-5 '>Ride Class: {tripDetails.Class}</li>
               <li className='relative left-[40px] mt-5'>Trip Distance: {tripDetails.Distance}KM</li>
               <li className='relative left-[40px] mt-5'>Trip Duration: {tripDetails.Duration}</li>
               <li className='relative left-[40px] mt-5'>Total Price: {tripDetails.Price} EGP</li>

@@ -36,7 +36,6 @@ const DriverOngoingTrip = () => {
       if (tripData.user_id) {
         fetchUserDetails(tripData.user_id); // Fetch user details if user_id is available
       } else {
-        console.error('user_id is missing in tripData');
       }
     } else {
       console.log('No data passed. Handle the error or fallback logic here.');
@@ -55,14 +54,11 @@ const DriverOngoingTrip = () => {
   }, []); // Empty dependency array ensures this effect runs only once, on mount
 
   const fetchUserDetails = async (userId) => {
-    console.log('Fetching user details for user_id:', userId);
     try {
       const response = await axios.get(`http://localhost:3001/user/${userId}`); // Use the correct base URL
-      console.log('User details response:', response);
   
       if (response.data && typeof response.data === 'object') {
         setUserDetails(response.data); // Set user details received from backend
-        console.log('User details set:', response.data);
       } else {
         console.error('Unexpected response format:', response.data);
       }
@@ -93,7 +89,6 @@ const DriverOngoingTrip = () => {
         driver_id: tripData.driver_id,
         rating: rating,
       });
-      console.log('Rating update response:', response);
     } catch (error) {
       console.error('Error updating rating:', error);
     }

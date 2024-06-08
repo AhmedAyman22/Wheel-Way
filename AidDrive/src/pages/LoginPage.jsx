@@ -22,9 +22,9 @@ const LoginPage = () => {
       const password = document.getElementById("password").value;
       try {
         const response = await axios.post('http://localhost:3001/api/login', { email, password, accountType }, { withCredentials: true });
-        const userId = response.data.id;
-        setUserId(userId);
-        const user = response.data.first_name;
+        const userId = response.data.user_id;
+        setUserId(userId);  
+        const user = response.data.last_name;
         setUser(user);
 
         if (accountType === 'rider') {

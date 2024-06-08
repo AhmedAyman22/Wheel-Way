@@ -40,7 +40,6 @@ const CaptainSignupPage = () => {
         } catch (error) {
           console.error('There was an error signing up:', error);
         }
-        alert('Form submission successful!');
       }
     }
   };
