@@ -2,72 +2,59 @@ import React, { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import uniqid from 'uniqid';
 import fileDelete from '../assets/images/file-remove.png';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const RiderSignupPage = () => {
+const CaptainSignupPage = () => {
   const [password, setPassword] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState({});
-  const [mobileNumber, setMobileNumber] = useState('');
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
 
-  const formSubmission =  async(event) => {
+  const formSubmission = async (event) => {
     event.preventDefault();
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
-    var passwordConfirm = document.getElementById("passwordConfirmation").value;
+    var mobile = document.getElementById("mobileNumber").value;
 
     if (!validatePassword(password)) {
-      alert('Password must be at least 6 characters long, contain at least one special character, one uppercase letter, and one lowercase letter.');
+      alert('Password must be at least 6 characters long.');
       return;
-    }
-
-    if (password !== passwordConfirm) {
-      alert('Please make sure to write the password twice identically!');
     } else {
       console.log('firstName', firstName);
       console.log('lastName', lastName);
       console.log('email', email);
       console.log('password', password);
-      console.log('passwordConfirm', passwordConfirm);
+      console.log('mobile', mobile);
+
       const captchaValue = recaptcha.current?.getValue();
       if (!captchaValue) {
         alert('Please verify the reCAPTCHA!');
       } else {
         try {
-          const response = await axios.post('http://localhost:3001/api/rider/signup', { firstName, lastName, email, password });
-                      console.log(response.data);
+          const response = await axios.post('http://localhost:3001/api/rider/signup', { firstName, lastName, email, password, mobile },{ withCredentials: true });
+          console.log(response.data);
         } catch (error) {
-            console.error('There was an error signing up:', error);
+          console.error('There was an error signing up:', error);
         }
-        alert('Form submission successful!');
       }
     }
-    
   };
+
+  const validatePassword = (password) => {
+    const minLength = 6;
+    if (password.length < minLength) return false;
+    return true;
+  };
+
   const validateMobile = (e) => {
     const value = e.target.value;
     // Remove non-numeric characters
     const numericValue = value.replace(/[^0-9]/g, '');
     setMobileNumber(numericValue);
-  };
-
-  const validatePassword = (password) => {
-    const minLength = 6;
-   /* const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
-    const capitalLetterPattern = /[A-Z]/;
-    const smallLetterPattern = /[a-z]/;
-
-    if (!specialCharPattern.test(password)) return false;
-    if (!capitalLetterPattern.test(password)) return false;
-    if (!smallLetterPattern.test(password)) return false;
-    */
-    if (password.length < minLength) return false;
-    return true;
   };
 
   const handleFileChange = (event) => {
@@ -98,7 +85,7 @@ const RiderSignupPage = () => {
         Size: files[i].size,
         filePath: "lessa",
         Date: new Date().toISOString(),
-        RiderID: "lessa",
+        CaptainID: "lessa",
       };
     }
     setUploadedFiles(newUploadedFiles);
@@ -113,10 +100,11 @@ const RiderSignupPage = () => {
     console.log('deleteFiles');
   };
 
+
   return (
     <div className='bg-primary h-[700px] w-[1300px] relative left-1/2 -translate-x-1/2 top-[4rem] shadow-2xl rounded-[50px] '>
       <span className='text-[20px] font-bold flex items-center justify-center h-auto sm:text-[30px] relative top-3 text-whitish ' >
-        RIDER SIGNUP FORM
+        CAPTAIN SIGNUP FORM
       </span>
       <div className='relative w-[1300px] h-[550px] top-[20px] '>
         <form className='bg-secondary h-[550px] w-[500px] rounded-[20px] absolute left-20 inline-block '>
@@ -138,11 +126,12 @@ const RiderSignupPage = () => {
           <span className='text-[14px] font-bold left-[50px] select-none sm:text-[18px] relative top-5 text-primary '>Please upload the following documents</span>
           <ul className='list-inside list-disc relative left-[50px] justify top-[30px] left-[50px] font-bold text-primary'>
             <li>National ID (Front-Back)</li>
-            <li>Disability Card (Front-Back)</li>
+            <li>Driver’s License (Front-Back)</li>
+            <li>Criminal log done in the last 3 months</li>
           </ul>
-          <label htmlFor="fileUploader" className='text-primary text-[14px] font-bold relative top-[50%] left-[32%] select-none '>PNG and JPG formats only</label>
-          <input ref={fileInputRef} type="file" id='fileInput' onChange={handleFileChange} required multiple accept='.jpg,.png' className=' text-transparent w-[400px] file:bg-primary file:h-[50px] file:w-[120px] file:border-none file:relative file:top-[50%] file:left-[50%] file:-translate-x-1/2  h-[200px] outline-dashed outline-primary rounded-[10px] relative left-[50%] top-[31%] -translate-x-1/2 -translate-y-1/2 file:cursor-pointer file:rounded-[5px] file:font-bold file:hover:-translate-y-[30px] file:hover:scale-110 file:transition file:ease-in-out file:delay-150 file:hover:text-whitish file:text-whitish'/>
-          <ul  className=' w-[390px] text-primary display:inline-block; text-[14px] font-bold relative bottom-[23%] left-[12%] text-primary font-bold text-[14px] text-wrap'>
+          <label htmlFor="fileUploader" className='text-primary text-[14px] font-bold relative top-[46%] left-[32%] select-none '>PNG and JPG formats only</label>
+          <input ref={fileInputRef} type="file" id='fileInput' onChange={handleFileChange} required multiple accept='.pdf,.jpg,.png' className=' text-transparent w-[400px] file:bg-primary file:h-[50px] file:w-[120px] file:border-none file:relative file:top-[50%] file:left-[50%] file:-translate-x-1/2  h-[200px] outline-dashed outline-primary rounded-[10px] relative left-[50%] top-[27%] -translate-x-1/2 -translate-y-1/2 file:cursor-pointer file:rounded-[5px] file:font-bold file:hover:-translate-y-[30px] file:hover:scale-110 file:transition file:ease-in-out file:delay-150 file:hover:text-whitish file:text-whitish'/>
+          <ul  className=' w-[390px] text-primary display:inline-block; text-[14px] font-bold relative bottom-[27%] left-[12%] text-primary font-bold text-[14px] text-wrap'>
               {Object.values(uploadedFiles).map(file => (
                 <li key={file.Name}>
                   {file.Name.length > 50
@@ -152,13 +141,11 @@ const RiderSignupPage = () => {
               ))}
             </ul>
           <button type='submit' className='w-[250px] h-[80px] bg-accent rounded-[10px] font-bold text-primary text-[20px] translate-y-4 drop-shadow-md fixed bottom-28 right-20 transform -translate-x-1/2 -translate-y-1 hover:scale-110 transition ease-in-out delay-150 z-50'>SUBMIT</button>
-
         </form>
         <Link to='/login'className='font-bold text-[14px] text-blue-700 hover:text-blue-500 fixed bottom-[5%] left-[50%] transform -translate-x-1/2'>Already have an account?</Link>
-
       </div>
     </div>
   );
 };
 
-export default RiderSignupPage;
+export default CaptainSignupPage;

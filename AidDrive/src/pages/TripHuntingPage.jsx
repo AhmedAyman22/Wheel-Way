@@ -14,55 +14,34 @@ const TripHuntingPage = () => {
   const [hunting, setHunting] = useState(false);
   const [loader, setLoader] = useState(false);
   const [pendingTrips, setPendingTrips] = useState([]);
-  const [currentTripIndex, setCurrentTripIndex] = useState(0); // Track current trip index
-  const [userId, setUserId] = useState(null); // State to store userId
+  const [currentTrip, setCurrentTrip] = useState(null);
+  const { userId } = useContext(UserContext);
+  const [foundDriver, setFoundDriver] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Fetch userId from session when component mounts
-    fetchUserId();
-  }, []);
-
-  const fetchUserId = async () => {
-    try {
-      const response = await axios.get('http://localhost:3001/api/userid', { withCredentials: true });
-      setUserId(response.data.userId);
-    } catch (error) {
-      console.error('Error fetching userId:', error);
-    }
-  };
+  const driverPos = {}
 
   useEffect(() => {
     const fetchPendingTrips = async () => {
       try {
-        setLoader(true); // Show loading spinner
-        const response = await axios.get('http://localhost:3001/pending-trips', { withCredentials: true });
+        const response = await axios.get('http://localhost:3001/pending-trips',{ withCredentials: true });
         setPendingTrips(response.data);
         stopHunting();
       } catch (error) {
         console.error('Error fetching pending trips:', error);
-      } finally {
-        setLoader(false); // Hide loading spinner after fetching
       }
     };
-    
-  
-    const interval = setInterval(fetchPendingTrips, 3000); // Fetch pending trips every 3 seconds
-  
-    return () => {
-      clearInterval(interval); // Clear interval on component unmount
-      setLoader(true); // Hide loading spinner when interval is cleared  
-    };
-  }, []);
-  
 
-  const acceptTrip = async (ride_id, userId) => {
+    fetchPendingTrips();
+  }, []);
+
+  const acceptTrip = async (ride_id) => {
     try {
       await axios.post('http://localhost:3001/accept-trip', { ride_id, driver_id: userId },{ withCredentials: true });
       setPendingTrips(pendingTrips.filter(trip => trip.ride_id !== ride_id));
-      setTripFound(false);
-      console.log(ride_id, userId);
-    } catch (error) { 
+      setTripFound(false); // Hide the trip details after accepting
+      setFindingDriver(true);
+    } catch (error) {
+      console.log('Ride ID:', ride_id);
       console.error('Error accepting trip:', error);
     }
   };
@@ -74,7 +53,8 @@ const TripHuntingPage = () => {
 
   const hunt = () => {
     if (pendingTrips.length > 0) {
-      setCurrentTripIndex(0); // Reset current trip index
+      setCurrentTrip(pendingTrips[0]); // Take the first trip for simplicity
+      console.log(currentTrip.ride_id);
       setTripFound(true);
     }
     setHunting(true);
@@ -82,24 +62,13 @@ const TripHuntingPage = () => {
   };
 
   const handleAccept = async () => {
-    const currentTrip = pendingTrips[currentTripIndex];
-    await acceptTrip(currentTrip.ride_id, userId);
+    await acceptTrip(currentTrip.ride_id);
     var container = {
-      data: currentTrip,
-      driverLat: userLocation.lat,
-      driverLng: userLocation.lng,
+      data:currentTrip,
+      driverLat:userLocation.lat,
+      driverLng:userLocation.lng,
     }
     navigate('/driverOngoing', { state: container });
-  };
-
-  const handleDecline = () => {
-    const nextIndex = currentTripIndex + 1;
-    if (nextIndex < pendingTrips.length) {
-      setCurrentTripIndex(nextIndex);
-      setTripFound(true);
-    } else {
-      setTripFound(false);
-    }
   };
 
   useEffect(() => {
@@ -111,6 +80,8 @@ const TripHuntingPage = () => {
             lng: position.coords.longitude,
           });
           setLocationPermissionGranted(true);
+          currentTrip[driverLat] = position.coords.latitude;
+          currentTrip[driverLng] = position.coords.longitude;
         },
         (error) => {
           console.error("Error getting user location:", error);
@@ -167,21 +138,21 @@ const TripHuntingPage = () => {
           </button>
         )}
         
-        {tripFound && pendingTrips.length > 0 && (
+        {tripFound && currentTrip && (
           <div className="w-[450px] h-[300px] bg-primary text-whitish z-40 absolute top-[75%] left-[50%] transform -translate-x-1/2 drop-shadow-md z-50 -translate-y-1/2 rounded-[20px]">
             <img src={profileImg} className='fixed top-[13%] h-[60px] left-[5%]' />
             <ul className='w-[400px] h-[200px] text-whitish fixed top-[10%] left-[10%] font-bold'>
-              <li className='relative ml-16 text-[16px] mt-2'>PickUp: {pendingTrips[currentTripIndex].Pickup}</li>
-              <li className='relative ml-16 text-[16px] mt-2'>Dropoff : {pendingTrips[currentTripIndex].Dropoff}</li>
-              <li className='relative ml-16 text-[16px] mt-2'>Class : {pendingTrips[currentTripIndex].Class}</li>
-              <li className='relative ml-16 text-[16px] mt-2'>Distance: {pendingTrips[currentTripIndex].Distance} KM</li>
-              <li className='relative ml-16 text-[16px] mt-2'>Price: {pendingTrips[currentTripIndex].Price} EGP</li>
+              <li className='relative ml-16 text-[16px] mt-2'>PickUp: {currentTrip.Pickup}</li>
+              <li className='relative ml-16 text-[16px] mt-2'>Dropoff : {currentTrip.Dropoff}</li>
+              <li className='relative ml-16 text-[16px] mt-2'>Class : {currentTrip.Class}</li>
+              <li className='relative ml-16 text-[16px] mt-2'>Distance: {currentTrip.Distance} KM</li>
+              <li className='relative ml-16 text-[16px] mt-2'>Price: {currentTrip.Price} EGP</li>
             </ul>
             <img src={filledStar} className='h-[30px] fixed right-[18%] top-[61%]' />
             <p className='h-[40px] font-bold fixed right-[11%] top-[62%] text-[18px]'>4.5</p>
             <button 
               className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] left-[10%] transition ease-in-out delay-150 w-[120px] h-[50px] bg-accent text-primary font-bold hover:font-bold text-[18px] rounded-[5px]'
-              onClick={() => handleDecline()}
+              onClick={() => setTripFound(false)} // Logic for declining
             >
             DECLINE
             </button>

@@ -10,7 +10,7 @@ const TripDetailsPage = () => {
     // Fetch trip details from the backend API
     const fetchTripDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/trip-details');
+        const response = await axios.get('http://localhost:3001/trip-details',{ withCredentials: true });
         setTripDetails(response.data);
       } catch (error) {
         console.error('Error fetching trip details:', error);

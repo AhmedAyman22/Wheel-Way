@@ -35,7 +35,7 @@ const CaptainSignupPage = () => {
         alert('Please verify the reCAPTCHA!');
       } else {
         try {
-          const response = await axios.post('http://localhost:3001/api/captain/signup', { firstName, lastName, email, password, mobile });
+          const response = await axios.post('http://localhost:3001/api/captain/signup', { firstName, lastName, email, password, mobile },{ withCredentials: true });
           console.log(response.data);
         } catch (error) {
           console.error('There was an error signing up:', error);

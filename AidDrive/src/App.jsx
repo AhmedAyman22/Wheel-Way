@@ -18,7 +18,7 @@ import TripHuntingPage from './pages/TripHuntingPage';
 import AccountSettingPage from './pages/AccountSettingPage';
 import DriverOngoingTrip from './pages/Driver_Ongoing_Trip';
 import RiderOngoingTrip from './pages/Rider_Ongoing_Trip';
-
+import { DriverProvider } from './pages/drivercontext'; // Import DriverProvider
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,7 +46,9 @@ const router = createBrowserRouter(
 const App = () => {
   return (
     <UserProvider>
-      <RouterProvider router={router} />
+      <DriverProvider> {/* Wrap the RouterProvider with DriverProvider */}
+        <RouterProvider router={router} />
+      </DriverProvider>
     </UserProvider>
   );
 };
