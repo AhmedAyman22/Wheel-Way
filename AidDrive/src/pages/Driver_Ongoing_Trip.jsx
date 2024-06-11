@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import MapView from '../components/MapView';
 import RatingReview from '../components/RatingBar';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import profileIcon from '../assets/images/profile-icon.png';
 import compass from '../assets/images/compass.png';
 
-const DriverOngoingTrip = () => {
+const DriverOngoingTrip = () => { 
   const location = useLocation();
+  const navigate = useNavigate(); // Use navigate to programmatically navigate
   const [selectedRide, setSelectedRide] = useState(null);
   const [metRider, setMetRider] = useState(false);
   const [tripEnd, setTripEnd] = useState(false);
@@ -55,7 +56,7 @@ const DriverOngoingTrip = () => {
 
   const fetchUserDetails = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/user/${userId}`); // Use the correct base URL
+      const response = await axios.get(`http://localhost:3001/user/${userId}`,{ withCredentials: true }); // Use the correct base URL
   
       if (response.data && typeof response.data === 'object') {
         setUserDetails(response.data); // Set user details received from backend
@@ -88,7 +89,9 @@ const DriverOngoingTrip = () => {
         ride_id: tripData.ride_id,
         driver_id: tripData.driver_id,
         rating: rating,
-      });
+      },{ withCredentials: true } );
+      navigate('/triphunting'); // Redirect to /triphunting after rating is updated
+
     } catch (error) {
       console.error('Error updating rating:', error);
     }
@@ -162,9 +165,9 @@ const DriverOngoingTrip = () => {
             <p className='text-[18px] font-bold items-center justify-center mt-2 mb-2'>Please rate your rider to help us enhance your experience in the future.</p>
             <RatingReview rating={rating} setRating={setRating} />
             <button
-              onClick= {handleRatingUpdate}
-              className='bg-accent w-full h-[10%] text-primary relative top-[5%] text-[26px] font-bold transform transition ease-in-out delay-150 drop-shadow-md z-50 rounded-[5px] hover:-translate-y-1/4 hover:text-whitish mt-4'>
-                FINISH
+              onClick={handleRatingUpdate}
+             >
+
             </button>
           </div>
           <div className='h-[75%] w-[75%] fixed left-[50%] -translate-x-1/2 top-[22%] shadow-2xl rounded-[50px]'>
