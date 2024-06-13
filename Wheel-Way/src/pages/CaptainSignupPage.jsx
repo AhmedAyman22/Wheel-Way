@@ -4,6 +4,7 @@ import uniqid from 'uniqid';
 import fileDelete from '../assets/images/file-remove.png';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CaptainSignupPage = () => {
   const [password, setPassword] = useState("");
@@ -11,6 +12,7 @@ const CaptainSignupPage = () => {
   const [uploadedFiles, setUploadedFiles] = useState({});
   const recaptcha = useRef();
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const formSubmission = async (event) => {
     event.preventDefault();
@@ -37,6 +39,7 @@ const CaptainSignupPage = () => {
         try {
           const response = await axios.post('http://localhost:3001/api/captain/signup', { firstName, lastName, email, password, mobile },{ withCredentials: true });
           console.log(response.data);
+          navigate('/login');
         } catch (error) {
           console.error('There was an error signing up:', error);
         }

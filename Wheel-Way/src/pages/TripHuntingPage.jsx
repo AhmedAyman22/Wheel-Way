@@ -1,3 +1,4 @@
+// TripHuntingPage.js
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Map from '../components/Map';
@@ -15,15 +16,16 @@ const TripHuntingPage = () => {
   const [loader, setLoader] = useState(false);
   const [pendingTrips, setPendingTrips] = useState([]);
   const [currentTrip, setCurrentTrip] = useState(null);
+  const [found, setfound] = useState(false);
   const { userId } = useContext(UserContext);
-  const [foundDriver, setFoundDriver] = useState(false);
   const navigate = useNavigate();
-  const driverPos = {}
+
+  const driverPos = {};
 
   useEffect(() => {
     const fetchPendingTrips = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/pending-trips',{ withCredentials: true });
+        const response = await axios.get('http://localhost:3001/pending-trips', { withCredentials: true });
         setPendingTrips(response.data);
         stopHunting();
       } catch (error) {
@@ -36,10 +38,12 @@ const TripHuntingPage = () => {
 
   const acceptTrip = async (ride_id) => {
     try {
-      await axios.post('http://localhost:3001/accept-trip', { ride_id, driver_id: userId },{ withCredentials: true });
+      await axios.post('http://localhost:3001/accept-trip', { ride_id, driver_id: userId }, { withCredentials: true });
       setPendingTrips(pendingTrips.filter(trip => trip.ride_id !== ride_id));
-      setTripFound(false); // Hide the trip details after accepting
-      setFindingDriver(true);
+      setTripFound(true); // Update tripFound to true after accepting
+      setfound(true);
+      navigate({state:{founddriver:found}});
+      console.log(foundDriver); // Logs true
     } catch (error) {
       console.log('Ride ID:', ride_id);
       console.error('Error accepting trip:', error);
@@ -64,10 +68,10 @@ const TripHuntingPage = () => {
   const handleAccept = async () => {
     await acceptTrip(currentTrip.ride_id);
     var container = {
-      data:currentTrip,
-      driverLat:userLocation.lat,
-      driverLng:userLocation.lng,
-    }
+      data: currentTrip,
+      driverLat: userLocation.lat,
+      driverLng: userLocation.lng,
+    };
     navigate('/driverOngoing', { state: container });
   };
 
@@ -96,7 +100,6 @@ const TripHuntingPage = () => {
   useEffect(() => {
     console.log('loader state:', loader);
   }, [loader]);
-
   return (
     <>
       <p className="text-[36px] font-bold flex items-center justify-center h-auto sm:text-[48px] mt-[30px] text-primary">TRIP HUNT</p>
@@ -104,8 +107,8 @@ const TripHuntingPage = () => {
         {locationPermissionGranted && (
           <Map coordinates={userLocation} />
         )}
-        
-        { !tripFound && loader && (
+
+        {!tripFound && loader && (
           <div className="w-[450px] h-[300px] bg-primary text-whitish z-40 absolute top-[50%] left-[50%] transform -translate-x-1/2 drop-shadow-md z-50 -translate-y-1/2 rounded-[20px]">
             <p className="text-[20px] font-bold flex items-center justify-center h-auto sm:text-[48px] fixed top-[5%] -translate-x-1/2 left-[50%] text-accent">HUNTING!</p>
             <TailSpin
@@ -118,7 +121,7 @@ const TripHuntingPage = () => {
               wrapperStyle={{}}
               wrapperClass="fixed -translate-x-1/2 -translate-y-1/2 top-[50%] left-[50%]"
             />
-            <button 
+            <button
               className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] right-[50%] translate-x-1/2 transition ease-in-out delay-150
               w-[130px] h-[60px] bg-accent text-primary font-bold hover:font-bold text-[24px] rounded-[5px]'
               onClick={stopHunting}
@@ -127,7 +130,7 @@ const TripHuntingPage = () => {
             </button>
           </div>
         )}
-        
+
         {!hunting && (
           <button
             className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] right-[50%] translate-x-1/2 transition ease-in-out delay-150
@@ -137,7 +140,7 @@ const TripHuntingPage = () => {
             HUNT
           </button>
         )}
-        
+
         {tripFound && currentTrip && (
           <div className="w-[450px] h-[300px] bg-primary text-whitish z-40 absolute top-[75%] left-[50%] transform -translate-x-1/2 drop-shadow-md z-50 -translate-y-1/2 rounded-[20px]">
             <img src={profileImg} className='fixed top-[13%] h-[60px] left-[5%]' />
@@ -150,17 +153,17 @@ const TripHuntingPage = () => {
             </ul>
             <img src={filledStar} className='h-[30px] fixed right-[18%] top-[61%]' />
             <p className='h-[40px] font-bold fixed right-[11%] top-[62%] text-[18px]'>4.5</p>
-            <button 
+            <button
               className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] left-[10%] transition ease-in-out delay-150 w-[120px] h-[50px] bg-accent text-primary font-bold hover:font-bold text-[18px] rounded-[5px]'
               onClick={() => setTripFound(false)} // Logic for declining
             >
-            DECLINE
+              DECLINE
             </button>
             <button
               className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] right-[10%] transition ease-in-out delay-150 w-[120px] h-[50px] bg-accent text-primary font-bold hover:font-bold text-[18px] rounded-[5px]'
               onClick={handleAccept}
             >
-            ACCEPT
+              ACCEPT
             </button>
           </div>
         )}

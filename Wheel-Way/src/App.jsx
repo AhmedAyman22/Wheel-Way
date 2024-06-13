@@ -17,8 +17,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import TripHuntingPage from './pages/TripHuntingPage';
 import AccountSettingPage from './pages/AccountSettingPage';
 import DriverOngoingTrip from './pages/Driver_Ongoing_Trip';
+import { FoundDriverProvider } from './pages/driverfound';
+
 import RiderOngoingTrip from './pages/Rider_Ongoing_Trip';
-import { DriverProvider } from './pages/drivercontext'; // Import DriverProvider
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,20 +38,21 @@ const router = createBrowserRouter(
       <Route path='/trips' element={<TripDetailsPage />} />
       <Route path='/driverOngoing' element={<DriverOngoingTrip />} />
       <Route path='/riderOngoing' element={<RiderOngoingTrip />} />
-      <Route path='/*' element={<NotFoundPage />} />
       <Route path='/admin/login' element={<AdminLogin />}/>
       <Route path='/admin/dashboard' element={<AdminDashboard />}/>
+      <Route path='/*' element={<NotFoundPage />} />
     </Route>
   )
 );
 
 const App = () => {
   return (
+    <FoundDriverProvider>
     <UserProvider>
-      <DriverProvider> {/* Wrap the RouterProvider with DriverProvider */}
-        <RouterProvider router={router} />
-      </DriverProvider>
+      <RouterProvider router={router} />
     </UserProvider>
+    </FoundDriverProvider>
+
   );
 };
 

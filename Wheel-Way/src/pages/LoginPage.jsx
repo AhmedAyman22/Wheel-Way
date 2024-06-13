@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [accountType, setAccountType] = useState('');
   const recaptcha = useRef(null);
   const navigate = useNavigate();
-  const { setUser, setUserId } = useContext(UserContext);
+  const { setUser, setUserId, login } = useContext(UserContext);
 
   const submitLogin = async (event) => {
     event.preventDefault();
@@ -26,6 +26,8 @@ const LoginPage = () => {
         setUserId(userId);  
         const user = response.data.last_name;
         setUser(user);
+                login({ userId, user }); // Update the context with the logged-in user
+
 
         if (accountType === 'rider') {
           navigate('/booking');
