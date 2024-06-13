@@ -1,39 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import driver from '../assets/images/driver.png'
+import rider from '../assets/images/man.png'
+import {Link} from 'react-router-dom';
 
-const BookingPage = () => {
-  const [username, setUsername] = useState('');
-  const [trips, setTrips] = useState([]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userResponse = await axios.get('http://localhost:3001/api/user');
-        setUsername(userResponse.data.username);
-
-        const tripsResponse = await axios.get('http://localhost:3001/api/trips');
-        setTrips(tripsResponse.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
+const JoinUs = () => {
   return (
+    <>
     <div>
-      <h1>Welcome, {username}</h1>
-      <h2>Your Trips</h2>
-      <ul>
-        {trips.map((trip) => (
-          <li key={trip.id}>
-            {trip.Pickup} to {trip.Dropoff} on {trip.Date} - {trip.Price} EGP
-          </li>
-        ))}
-      </ul>
+      <h1 className='text-[36px] font-bold flex items-center justify-center h-auto sm:text-[48px] mt-[30px] text-primary' >JOIN US</h1>
+      <div className=''>
+        <div className='relative left-[360px] w-[500px] h-[700px] bg-whitish rounded-[20px] inline-block drop-shadow-lg'>
+          <h2 className='text-[36px] font-bold flex items-center justify-center h-auto sm:text-[48px] mt-[30px] text-primary'>Captain</h2>
+          <img src={driver} className='h-[400px] relative top-[35px] left-[50px]'/>
+          <div className='inline-block w-[220px] h-[70px] bg-accent rounded-[5px] drop-shadow-lg relative top-[75px] left-[135px] font-bold hover:font-bold text-[28px] text-primary hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 hover:text-whitish'>
+        <Link to='/join/captain' className='relative top-[20%] left-[15%] '>JOIN NOW</Link>
+        </div>
+        </div>
+        <div className='relative left-[550px] w-[505px] h-[700px] bg-whitish rounded-[20px] inline-block drop-shadow-lg'>
+        <h2 className='text-[36px] font-bold flex items-center justify-center h-auto sm:text-[48px] mt-[30px] text-primary'>Rider</h2>
+        <img src={rider} className='h-[400px] relative top-[35px] left-[50px]'/>
+        <div className='inline-block w-[220px] h-[70px] bg-accent rounded-[5px] drop-shadow-lg relative top-[75px] left-[135px] font-bold hover:font-bold text-[28px] text-primary hover:-translate-y-1 hover:scale-110 transition ease-in-out delay-150 hover:text-whitish'>
+        <Link to='/join/rider' className='relative top-[20%] left-[15%] '>JOIN NOW</Link>
+        </div>
+        </div>
+      </div>
     </div>
-  );
-};
+    </>
+  )
+}
 
-export default BookingPage;
+export default JoinUs

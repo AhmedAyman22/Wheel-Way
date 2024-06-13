@@ -36,9 +36,9 @@ const router = createBrowserRouter(
       <Route path='/trips' element={<TripDetailsPage />} />
       <Route path='/driverOngoing' element={<DriverOngoingTrip />} />
       <Route path='/riderOngoing' element={<RiderOngoingTrip />} />
-      <Route path='/*' element={<NotFoundPage />} />
       <Route path='/admin/login' element={<AdminLogin />}/>
       <Route path='/admin/dashboard' element={<AdminDashboard />}/>
+      <Route path='/*' element={<NotFoundPage />} />
     </Route>
   )
 );

@@ -11,6 +11,8 @@ import axios from 'axios';
 import { UserContext } from './userinfo';
 import { useNavigate } from 'react-router-dom';
 import accentBack from '../assets/images/accent-back.png';
+import { TailSpin } from 'react-loader-spinner';
+
 
 const apiKey = 'AIzaSyCvOjfMLwSmSFmcOMAc6TRMeeLIg6-Q2WI'; // Replace with your actual API key
 setKey(apiKey);
@@ -28,13 +30,14 @@ const BookingPage = () => {
   const [tripDetails, setTripDetails] = useState({});
   const [rideClass, setRideClass] = useState('Default');
   const [multiplier, setMultiplier] = useState(1);
-
+  const [findingDriver, setFindingDriver] = useState(false);
   const navigate = useNavigate();
 
   const BasePrice = 13;
   const KMPrice = 4;
   const minutePrice = 0.5;
   const minimumPrice = 16;
+
   let tripDuration = 0;
   let tripDistance = 0;
   let tripPrice = 0;
@@ -131,15 +134,16 @@ const BookingPage = () => {
   };
   
   const confirmTrip = async (event) => {
-    setIsPopupOpen(false);
-    setBlurOverlay(false);
+    // setIsPopupOpen(false);
+    // setBlurOverlay(false);
     const tripDetail = tripDetails[id];
+    findDriver()
     try {
       const response = await axios.post('http://localhost:3001/booking/booking', tripDetail);
       var container = {
         data: tripDetail,
       };
-      navigate('/riderOngoing', { state: container });
+      //navigate('/riderOngoing', { state: container });
     } catch (error) {
       console.error('There was an error with your booking:', error);
     }
@@ -162,6 +166,16 @@ const BookingPage = () => {
     dropoffLng: dropoffCoordinates?.lng,
   };
 
+  const findDriver = () => {
+    setFindingDriver(true);
+  }
+  const stopFindingDriver = () => {
+    setFindingDriver(false);
+    setIsPopupOpen(false);
+    setBlurOverlay(false);
+    setTripDetails({});
+
+  }
   return (
     <>
       <div className='w-[100%] h-[100%] z-10'>
@@ -286,7 +300,7 @@ const BookingPage = () => {
         {blurOverlay && (
           <div id='overlay' className={'z-50 filter blur-[200px] bg-whitish opacity-60 w-screen h-screen'}></div>
         )}
-        {isPopupOpen && (
+        {isPopupOpen && !findingDriver && (
           <div className='w-[400px] h-[400px] bg-primary text-whitish z-40 absolute top-[50%] left-[50%] transform -translate-x-1/2 drop-shadow-md z-50	-translate-y-1/2 rounded-[20px]'>
             <img 
             src={accentBack} 
@@ -303,9 +317,34 @@ const BookingPage = () => {
             </ul>
             <button
               className='h-[60px] w-[120px] bg-accent rounded-[10px] drop-shadow-md text-[20px] relative inline-block left-[200px] -translate-x-1/2 -translate-y-1/2 text-primary font-bold '
-              onClick={confirmTrip}
-            >
+              onClick={confirmTrip}>
               CONFIRM
+            </button>
+          </div>
+        )}
+        {findingDriver && isPopupOpen && (
+          <div className='w-[550px] h-[400px] bg-primary text-whitish z-40 absolute top-[50%] left-[50%] transform -translate-x-1/2 drop-shadow-md z-50	-translate-y-1/2 rounded-[20px]'>
+            <img
+            src={accentBack}
+            className='fixed left-[88%] top-[2%] cursor-pointer hover:-translate-y-1 transition ease-in-out duration-300'
+            onClick={stopFindingDriver}
+            draggable='false' />
+            <p className="text-[20px] font-bold flex items-center w-[350px] justify-center h-auto sm:text-[34px] fixed top-[10%] -translate-x-1/2 left-[50%] text-accent">Finding you a Driver!</p>
+            <TailSpin
+              visible={true}
+              height="90"
+              width="90"
+              color="#B38D97"
+              ariaLabel="Loading..."
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass="fixed -translate-x-1/2 -translate-y-1/2 top-[50%] left-[50%]"
+            />
+            <button 
+              className='hover:-translate-y-1 hover:text-whitish hover:scale-110 fixed bottom-[10%] right-[50%] translate-x-1/2 transition ease-in-out delay-150
+              w-[130px] h-[60px] bg-accent text-primary font-bold hover:font-bold text-[24px] rounded-[5px]'
+              onClick={disablePopup}
+            >STOP
             </button>
           </div>
         )}
