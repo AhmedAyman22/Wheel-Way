@@ -1,18 +1,23 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 const router = express.Router();
 
 router.post('/update', async (req, res) => {
+    const pool = req.app.get('pool');
     try {
-      const pool = req.app.get('pool');
-      const { first_name, last_name, email, password,accountType } = req.body;
-  
+      const { first_name, last_name, email, password, accountType } = req.body;
+
+      // Hash the password before storing - matches the approach used in
+      // signup/login routes (never persist plaintext passwords)
+      const hashedPassword = await bcrypt.hash(password, 10);
+
         if (accountType === 'rider') {
           // Update user_table
           await pool.query(`
             UPDATE user_table
             SET first_name = ?, last_name = ?, email = ?, password = ?
             WHERE email = ?
-          `, [first_name, last_name, email, password]
+          `, [first_name, last_name, email, hashedPassword, email]
         );
         } else if (accountType === 'driver') {
           // Update driver_table
@@ -20,17 +25,12 @@ router.post('/update', async (req, res) => {
             UPDATE driver_table
             SET first_name = ?, last_name = ?, email = ?, password = ?
             WHERE email = ?
-          `, [first_name, last_name, email, password]);
+          `, [first_name, last_name, email, hashedPassword, email]);
         }
-  
-        // Commit the transaction
-        await pool.commit();
-  
+
         res.status(200).json({ message: 'User details updated successfully!' });
      
     } catch (err) {
-      // Rollback the transaction in case of an error
-      await pool.rollback();
       console.error('Error updating user:', err);
       res.status(500).json({ message: 'Server error. Please try again later.' });
     }

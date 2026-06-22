@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 
 const router = Router();
 
@@ -11,15 +12,18 @@ router.post('/', async (req, res) => {
       const table = 'admin_table'; // Adjust this to the actual admin table name
       const idField = 'admin_id'; // Adjust this to the actual field name for the admin ID
 
-      // Execute SQL query to select the account from the admin table
-      const [results] = await pool.query(`SELECT * FROM ${table} WHERE email = ? AND password = ?`, [email, password]);
+      // Look up the account by email only - never compare passwords in SQL
+      const [results] = await pool.query(`SELECT * FROM ${table} WHERE email = ?`, [email]);
 
-      // If the account exists
       if (results.length > 0) {
         const user = results[0];
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
-        // Authenticate the user and include the ID and first name in the response
-        res.status(200).json({ message: 'Login successful!', id: user[idField], first_name: user.first_name });
+        if (passwordMatch) {
+          res.status(200).json({ message: 'Login successful!', id: user[idField], first_name: user.first_name });
+        } else {
+          res.status(401).json({ message: 'Incorrect Email and/or Password!' });
+        }
       } else {
         res.status(401).json({ message: 'Incorrect Email and/or Password!' });
       }
@@ -38,6 +42,9 @@ router.post('/admin/update', async (req, res) => {
     const pool = req.app.get('pool');
 
     if (user_id && driver_id && first_name && last_name && email && password) {
+      // Hash the password before persisting it - never store plaintext passwords
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // Start a transaction
       await pool.beginTransaction();
 
@@ -46,14 +53,14 @@ router.post('/admin/update', async (req, res) => {
         UPDATE user_table
         SET first_name = ?, last_name = ?, email = ?, password = ?
         WHERE user_id = ?
-      `, [first_name, last_name, email, password, user_id]);
+      `, [first_name, last_name, email, hashedPassword, user_id]);
 
       // Update driver_table
       await pool.query(`
         UPDATE driver_table
         SET first_name = ?, last_name = ?, email = ?, password = ?
         WHERE driver_id = ?
-      `, [first_name, last_name, email, password, driver_id]);
+      `, [first_name, last_name, email, hashedPassword, driver_id]);
 
       // Commit the transaction
       await pool.commit();
