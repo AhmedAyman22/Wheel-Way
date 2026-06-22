@@ -14,7 +14,7 @@ import accentBack from '../assets/images/accent-back.png';
 import { TailSpin } from 'react-loader-spinner';
 
 
-const apiKey = 'REMOVED_SECRET'; // Replace with your actual API key
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 setKey(apiKey);
 
 const BookingPage = () => {

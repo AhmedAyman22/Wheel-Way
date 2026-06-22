@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 
-const apiKey = "REMOVED_SECRET";
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const libraries = ['places'];
 const styles = {
   // your styles here

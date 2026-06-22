@@ -7,7 +7,7 @@ let directionsService;
 export let distanceinKM = null;
 export let tripDurationinMins = null;
 
-const apiKey = "REMOVED_SECRET";
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const libraries = ['places', 'directions'];
 const styles = {
   default: [],
